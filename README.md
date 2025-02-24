@@ -11,7 +11,7 @@
   - Confounding
   - Selection Bias
 
- Causal Identification in Observational Studies
+- Causal Identification in Observational Studies
   - Estimands
   - Methods for estimating causal effects
   - Assumptions required for causal identification
