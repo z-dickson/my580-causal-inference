@@ -474,12 +474,27 @@ ggdag(dag, text_size = 10, node_size = 14) + theme_dag() +
 - **Goal:** Estimate causal effects without bias.
 
 
-# Challenge 
+# Estimands in Causal Inference
 
-- **Observational Data:** No random assignment of treatment.
-- **Problem:** How can we estimate causal effects without bias?
-- **Solution:** Use statistical methods to approximate the counterfactual.
 
+::: {.incremental}
+- **ATE (Average Treatment Effect):**
+  - The average causal effect of treatment on the outcome.
+  - $ATE = E[Y(1) - Y(0)]$
+
+- **ATT (Average Treatment Effect on the Treated):**
+  - The average causal effect of treatment on the treated units.
+  - $ATT = E[Y(1) - Y(0) | T = 1]
+
+- **LATE (Local Average Treatment Effect):**
+  - The causal effect of treatment for compliers in an IV setting.
+  - $LATE = E[Y(1) - Y(0) | D = 1]$
+
+- **CATE (Conditional Average Treatment Effect):**
+  - The causal effect of treatment for a specific subgroup of units.
+  - $CATE = E[Y(1) - Y(0) | X]$
+
+:::
 
 # The Experimental Ideal (again)
 
@@ -487,6 +502,7 @@ ggdag(dag, text_size = 10, node_size = 14) + theme_dag() +
   - Gold standard for causal inference.
   - Random assignment ensures treatment is independent of potential outcomes.
   - Causal effects can be estimated without bias.
+  - Estimates the ATE.
 
 We want to keep returning to this ideal when designing observational studies.
 
@@ -496,7 +512,7 @@ We want to keep returning to this ideal when designing observational studies.
 
 - Workhorse of causal inference in economics and social sciences.
 - **Idea:** Compare changes in outcomes over time between treated and control groups.
-
+- **Estimand:** The average treatment effect of the treatment on the treated.
 
 # Difference-in-Differences (DiD) 
 
@@ -547,6 +563,8 @@ Many policies assign treatment based on a threshold. RD estimates causal effects
 
 - **Idea:** Compare outcomes for units just above and below a [arbitrary] threshold.
 - **Key Assumption:** Units just above and below the threshold are similar in all other respects.
+- **Estimand:** Usually the LATE (Local Average Treatment Effect).
+  
 
 
 
@@ -595,7 +613,7 @@ The maximum number of students per seminar group at LSE is 30. We want to know w
 
 - **Idea:** Use an instrument to estimate the causal effect of treatment.
 - **Instrument:** A variable that affects treatment but is unrelated to the outcome.  
-
+- **Estimand:** LATE (Local Average Treatment Effect) for compliers.
 
 
 # Instrumental Variables (IV)
@@ -608,13 +626,11 @@ The maximum number of students per seminar group at LSE is 30. We want to know w
 
 # IV Example
 
-**Does a college education increase earnings?**
+**Does college education increase earnings?**
 
-There are many reasons why people choose to go to college, such as ability, motivation, and family background. One factor that may affect college attendance is proximity to a college. We can use proximity to a college as an instrument for college attendance.
+There are many reasons why people choose to go to college, such as ability, motivation, and family background. One factor that may affect college attendance is proximity to a college. We can use proximity to a college as an instrument for college attendance [@card1993using]
 
-::: footer
-[@card1993using]
-:::
+
 
 # IV Example 
 
@@ -762,12 +778,14 @@ where:
 # Github Repository
 
 
+Github Repository: [Causal Inference Methods for Observational Data](https://github.com/z-dickson/my580-causal-inference)
+
 
 
 
 # Let's switch to R 
 
-
+This notebook is available in the Github repository `Code` folder titled `DID_notebook.qmd`
 
 
 

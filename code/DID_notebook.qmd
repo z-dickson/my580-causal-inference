@@ -1,7 +1,7 @@
 
 # Difference-in-Differences (DID) Analysis
 
-In this notebook, we we estimate the effect of Trump's calls for liberation in three specific states on compliance with state lockdown restrictions using a Difference-in-Differences (DID) approach. We use data from the Google Mobility Report and the New York Times COVID-19 dataset. The original study is by Dickson & Hobolt in APSR (2024). 
+In this notebook, we we estimate the effect of Trump's calls for liberation in three specific states on compliance with state lockdown restrictions using a Difference-in-Differences (DID) approach. The authors compare Republican counties in the treated and control states. We use data from the Google Mobility Reports. The original study is by Dickson & Hobolt in APSR (2024). 
 
 
 # First we install the necessary libraries and load the data
@@ -15,16 +15,19 @@ The data can be downloaded from Github [here](https://github.com/z-dickson/my580
 
 
 # load libraries 
-library(tidyverse) # for data manipulation
 library(fixest) # for fixed effects regression
+library(tidyverse) # for data manipulation
+```
 
 
-# load data from Github after downloading  
-data <- read_csv("data/us_mobility.csv")
+```{r}
+# load data from Github  
+data <- read_csv("https://github.com/z-dickson/my580-causal-inference/raw/refs/heads/main/data/us_mobility.csv")
 
 # print the first few rows
 head(data)
 ```
+
 
 
 # Data Cleaning
@@ -95,10 +98,52 @@ $$Y_{it} = \alpha_i + \lambda_t + \delta \text{treatment}_{it} + \epsilon_{it}$$
 
 where $\text{treatment}_{it} = \text{treated}_i * \text{post}_t$.
 
-This is because the interaction term $\text{treated}_i * \text{post}_t$ is effectively creating a variable that is 1 for treated states in the post-treatment period and 0 otherwise. This is the essence of the Difference-in-Differences (DID) approach.
+This is because the interaction term $\text{treated}_i * \text{post}_t$ is effectively creating a variable that is 1 for treated states in the post-treatment period and 0 otherwise, and the fixed effects absorb the dummy variables. This is the essence of the Difference-in-Differences (DID) approach.
 
 This equation is also effectively the same as the following:
 
-$$Y_{it} = \beta_{0} \text{treated} + \beta_{1} \text{pre_post} + \delta (\text{treated}_i * \text{post}_t) + \epsilon_{it}$$
+$$Y_{it} = \beta_{0} \text{treated} + \beta_{1} \text{post} + \delta (\text{treated}_i * \text{post}_t) + \epsilon_{it}$$
 
-Here, $\beta_{0}$ captures the average outcome for the control group before the treatment, $\beta_{1}$ captures the average change over time for the control group, and $\delta$ captures the effect of the treatment on the treated group.
+Here, $\beta_{0}$ captures the average difference between treated and not-treated units. $\beta_{1}$ captures the average difference pre- and post-treatment. And $\delta$ captures the difference in these two differences; hence, the name "Difference-in-Differences."
+
+
+# Estimating the model
+
+There are many ways to estimate a DID model. Here, we will use the `fixest` package in R. 
+
+`Fixest` syntax using a `|` to separate the fixed effects from the rest of the formula. Our syntax will look like the following: 
+
+Our $Y_{it}$ is mobility (`retail_and_recreation_percent_change_from_baseline`) in county $i$ (`county`) on day $t$ (`date`).
+
+We will cluster the standard errors at the county level to account for potential correlation within counties.
+
+
+```{r}
+# estimate the DID model
+did_model <- feols(fml = retail_and_recreation_percent_change_from_baseline ~ treatment * pre_post | county + date, data = data, vcov = ~ county)
+
+summary(did_model)
+```
+
+
+# Interpretation of the results
+
+The coefficient of the interaction term `treatment * pre_post` in the model output is the estimated causal effect of Trump's calls for liberation on compliance with state lockdown restrictions, given that our model is specified correctly and the assumptions of the DID approach hold. 
+
+The coefficient of the interaction term is the difference-in-differences estimate. It tells us how much the treatment group (states where Trump called for liberation) changed relative to the control group (states where he did not) after the treatment (Trump's calls for liberation) compared to before the treatment.
+
+The coefficient estimate is the **cumulative effect** of the treatment over the post-treatment period. Because the 'post-treatment' period in the data covers 1-week, the coefficient estimate is the cumulative effect of the treatment over that 1-week period. Hence, the cumulative ATT is about 1 percentage point, given that the outcome variable is in percentage points.
+
+
+
+# What if we want to estimate the dynamic effects of the treatment over time? 
+
+One of the key advantages to DiD is that we can estimate the dynamic effects of the treatment over time. This is typically referred to as the *event study* approach. Many libraries in R can help us estimate the event study approach. Here, we will use the `fixest` package to estimate the event study approach.
+
+
+```{r}
+# estimate the event study model
+event_study <- feols(fml = retail_and_recreation_percent_change_from_baseline ~ i(date, treatment, '2020-04-16') | county + date, data = data, vcov = ~ county)
+
+summary(event_study)
+```
