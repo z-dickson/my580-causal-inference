@@ -6,12 +6,22 @@ In this notebook, we we estimate the effect of Trump's calls for liberation in t
 
 # First we install the necessary libraries and load the data
 
-The data can be downloaded from Github [here](https://github.com/z-dickson/my580-causal-inference/data/us_mobility.csv).
+The data can be downloaded from Github [here](https://github.com/z-dickson/my580-causal-inference/data/google_mobility_data.csv).
 
 ```{r}
-# install libraries (if not already installed)
-#install.packages("tidyverse")
-#install.packages("fixest")
+
+# install packages if they are not already installed
+
+# List of package names to install
+packages_to_install <- c("fixest", "tidyverse")
+
+# Check if each package is already installed
+for (package_name in packages_to_install) {
+  if (!(package_name %in% installed.packages())) {
+    # If not installed, install the package
+    install.packages(package_name)
+  }
+}
 
 
 # load libraries 
@@ -21,8 +31,11 @@ library(tidyverse) # for data manipulation
 
 
 ```{r}
-# load data from Github  
-data <- read_csv("https://github.com/z-dickson/my580-causal-inference/raw/refs/heads/main/data/us_mobility.csv")
+# load data from Github  (uncomment the line below to load the data from Github)
+#data <- read_csv("https://github.com/z-dickson/my580-causal-inference/data/google_mobility_data.csv")
+
+# or, load data from local file if you've cloned the repository
+data <- read_csv("../data/google_mobility_data.csv")
 
 # print the first few rows
 head(data)
@@ -32,27 +45,42 @@ head(data)
 
 # Data Cleaning
 
-Usually, we would need to clean the data before we can use it for analysis. However, the data is already clean and ready for analysis.
+Usually, we would need to clean the data before we can use it for analysis. However, the data is already mostly clean. We will make some key adjustments to for demonstration purposes. 
 
-Let's check the columns in the data.
+
+# Let's create a column for `aggregate_mobility`
+
+In the analysis, we will use an aggregate measure of mobility that combines all types of mobility (e.g., retail, grocery, parks, etc.). We will create a new column called `aggregate_mobility` that sums up all the mobility measures for each observation.
+
 
 ```{r}
-# what columns are in the data?
-colnames(data)
+
+# create variable for aggregate mobility by adding all the mobility variables 
+data$aggregate_mobility = data$retail_and_recreation_mobility + data$grocery_and_pharmacy_mobility + data$parks_mobility + data$transit_mobility + data$workplaces_mobility + data$residential_mobility
+
+# check the new column
+hist(data$aggregate_mobility)
 ```
 
-# Let's identify the treatment and control groups 
+
+
+# Let's create a column for the treatment and control groups 
 
 The treatment group is the states where Trump called for liberation (Michigan, Minnesota, and Virginia) and the control group is the states where he did not (all other states). 
 
-**Note**: In the actual study, the treatment group is defined as the states where Trump called for liberation and the control group is the states that were under the same lockdown restrictions but were not targeted in Trump's calls for liberation. However, for simplicity, we will use the above definition. The results are similar in both cases.
+**Note**: In the actual study, the treatment group is defined as the states where Trump called for liberation and the control group is the states that were under the same lockdown restrictions but were not targeted in Trump's calls for liberation. We'll subset the data so that only Republican states are included in the analysis.
 
 ```{r}
 # create a variable for treatment and control groups
 targeted_states <- c("Michigan", "Minnesota", "Virginia")
 
 data <- data %>%
-  mutate(treatment = ifelse(state %in% targeted_states, 1, 0))
+  mutate(treatment = ifelse(state_name %in% targeted_states, 1, 0))
+
+
+# subset the data to include only Republican states
+#data <- data %>%
+#  filter(winning_party == "REPUBLICAN")
 
 # check the treatment variable
 table(data$treatment)
@@ -66,11 +94,13 @@ The pre-post variable indicates whether the observation is before or after Trump
 ```{r}
 # create a variable for pre-post and treatment-control
 data <- data %>%
-  mutate(pre_post = ifelse(date < "2020-04-17", 0, 1))
+  mutate(post = ifelse(date < "2020-04-17", 0, 1))
 
 # check the pre-post and treatment-control variables - we'll print all the dates that appear in the data when the pre_post variable is 1
-unique(data[data$pre_post == 1, 'date'])
+unique(data[data$post == 1, 'date'])
 ```
+
+
 
 
 # Let's estimate the effect of Trump's calls for liberation on compliance with state lockdown restrictions using a Difference-in-Differences (DID) approach
@@ -113,14 +143,14 @@ There are many ways to estimate a DID model. Here, we will use the `fixest` pack
 
 `Fixest` syntax using a `|` to separate the fixed effects from the rest of the formula. Our syntax will look like the following: 
 
-Our $Y_{it}$ is mobility (`retail_and_recreation_percent_change_from_baseline`) in county $i$ (`county`) on day $t$ (`date`).
+Our $Y_{it}$ is mobility (`aggregate_mobility`) in county $i$ (`county`) on day $t$ (`date`).
 
 We will cluster the standard errors at the county level to account for potential correlation within counties.
 
 
 ```{r}
 # estimate the DID model
-did_model <- feols(fml = retail_and_recreation_percent_change_from_baseline ~ treatment * pre_post | county + date, data = data, vcov = ~ county)
+did_model <- feols(fml = aggregate_mobility ~ treatment * post | county + date, data = data, vcov = ~ county)
 
 summary(did_model)
 ```
@@ -132,7 +162,7 @@ The coefficient of the interaction term `treatment * pre_post` in the model outp
 
 The coefficient of the interaction term is the difference-in-differences estimate. It tells us how much the treatment group (states where Trump called for liberation) changed relative to the control group (states where he did not) after the treatment (Trump's calls for liberation) compared to before the treatment.
 
-The coefficient estimate is the **cumulative effect** of the treatment over the post-treatment period. Because the 'post-treatment' period in the data covers 1-week, the coefficient estimate is the cumulative effect of the treatment over that 1-week period. Hence, the cumulative ATT is about 1 percentage point, given that the outcome variable is in percentage points.
+The coefficient estimate is the **cumulative effect** of the treatment over the post-treatment period. Because the 'post-treatment' period in the data covers 1-week, the coefficient estimate is the cumulative effect of the treatment over that 1-week period. Hence, the cumulative ATT is about 6 percentage point, given that the outcome variable is in percentage points.
 
 
 
@@ -141,9 +171,104 @@ The coefficient estimate is the **cumulative effect** of the treatment over the 
 One of the key advantages to DiD is that we can estimate the dynamic effects of the treatment over time. This is typically referred to as the *event study* approach. Many libraries in R can help us estimate the event study approach. Here, we will use the `fixest` package to estimate the event study approach.
 
 
+There are a few things we need to do to prepare the data. First, we need to convert the date variable to an integer. This is because the `Fixest` library uses a format where the holdout date is specified as an integer.
+
+```{r}
+# convert the date variable to an integer
+data$date_int <- as.integer(as.factor(data$date))
+
+# check the data by printing a dictionary of the date and the date_int variables
+unique(data[c('date', 'date_int')])
+```
+
+
+# Estimating the event study model
+
+We'll use April 17 -- the date of the messages -- as the holdout period. This means that the holdout period will be 8 (see above). 
+
+
 ```{r}
 # estimate the event study model
-event_study <- feols(fml = retail_and_recreation_percent_change_from_baseline ~ i(date, treatment, '2020-04-16') | county + date, data = data, vcov = ~ county)
+event_study <- feols(fml = aggregate_mobility ~ i(date_int, treatment, ref = 7) | county + date_int, data = data, vcov = ~ county)
 
 summary(event_study)
 ```
+
+
+# Plot the event study results
+
+We can plot the event study results to visualize the dynamic effects of the treatment over time. Using the `Fixest` library, we can use the `iplot` function to plot the event study results.
+
+```{r}
+
+iplot(event_study)
+```
+
+
+# How can we improve the analysis?
+
+There are several ways to improve the analysis:
+
+- Use a better estimator: While the fixed effects estimator is consistent and robust, it may not be the most efficient estimator. Other estimators, such as synthetic control, matrix completion, or other machine learning methods, may provide more precise estimates.
+- Include more control variables: Adding more control variables can help reduce bias and improve the precision of the estimates.
+- Check for parallel trends: The parallel trends assumption is crucial for the validity of the DID approach. Checking for parallel trends visually or using statistical tests can help ensure the validity of the estimates.
+- Test for sensitivity: Conducting sensitivity analyses, such as placebo tests or robustness checks, can help assess the robustness of the estimates to different model specifications or assumptions.
+
+
+
+# Extension 
+
+In Dickson & Hobolt (2024), we use matrix completion methods to estimate a counterfactual using the data from the control states. We then compare the actual treatment effect to the counterfactual to estimate the causal effect of Trump's calls for liberation. That's beyond the scope of this notebook, but I'll include the code below: 
+
+```{r}
+
+# install packages if they are not already installed
+
+# List of package names to install
+packages_to_install <- c("fect")
+
+# Check if each package is already installed
+for (package_name in packages_to_install) {
+  if (!(package_name %in% installed.packages())) {
+    # If not installed, install the package
+    install.packages(package_name)
+  }
+}
+
+library(fect)
+
+
+# create a treatment variable that includes the interaction of treatment and post
+data$treatment_post <- data$treatment * data$post
+
+# function to estimate the matrix completion
+estimate <- function(data, formula) {
+  fect(data = data,
+       formula = formula,
+       method = "mc", 
+       seed = 42,
+       index = c("county", "date_int"),
+       r = c(0, 5),
+       k = 10,
+       CV = TRUE,
+       force = "two-way",
+       nlambda = 15, 
+       se = TRUE,
+       parallel = TRUE,
+       cores = 16, # adjust accordingly 
+       nboots = 200)
+}
+
+# estimate the matrix completion model
+full_state_aggregate <- estimate(data, 
+    aggregate_mobility ~ treatment_post)
+
+
+# print the results
+print(full_state_aggregate)
+
+
+# plot the results
+plot(full_state_aggregate)
+```
+

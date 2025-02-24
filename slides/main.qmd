@@ -28,8 +28,6 @@ format:
   - The Experimental Ideal
   - Counterfactual reasoning 
   - The Fundamental Problem of Causal Inference
-  
-
 
 *10 minute break*
 
@@ -41,17 +39,15 @@ format:
 
 
 - Causal Identification in Observational Studies
-  - Matching
-  - Generalized Difference-in-Differences
-  - Regression Discontinuity
-  - Instrumental Variables
+  - Methods for estimating causal effects
+  - Assumptions required for causal identification
 
 
 *10 minute break*
 
-- Advanced Topics in Observational Causal Inference
-  - Sensitivity Analysis
-  - Machine Learning & Causal Inference
+- Applied Example with DiD 
+  - Estimating the ATT
+  - Interpreting the Results
 
 
 
@@ -119,11 +115,11 @@ format:
   - **T = 1** (treated)
   - **T = 0** (control)
 - Define potential outcomes:
-  - \( Y(1) \) = Outcome if treated
-  - \( Y(0) \) = Outcome if not treated
+  - $Y(1)$ = Outcome if treated
+  - $Y(0)$ = Outcome if not treated
 - **Causal Effect:**
   
-  $$ Causal \, Effect = Y(1) - Y(0) $$
+  $$ ATE = Y(1) - Y(0) $$
   
 - **Problem:** We can only observe one of these!
 
@@ -131,7 +127,7 @@ format:
 
 # The Fundamental Problem of Causal Inference
 
-- We never observe both **\( Y(1) \)** and **\( Y(0) \)** for the same unit.
+- We never observe both $Y(1)$ and $Y(0)$ for the same unit.
 - This makes causal inference **challenging**.
 - **Solution:** Use statistical methods to approximate the counterfactual.
 
@@ -141,8 +137,8 @@ format:
 
 | Unit | Treated? (T) | Observed Outcome | Counterfactual Outcome |
 |------|-------------|-----------------|------------------------|
-| A    | 1           | \( Y_A(1) \)     | \( Y_A(0) \) (Missing) |
-| B    | 0           | \( Y_B(0) \)     | \( Y_B(1) \) (Missing) |
+| A    | 1           | $Y_A(1)$     | $Y_A(0)$ (Missing) |
+| B    | 0           | $Y_B(0)$     | $Y_B(1)$ (Missing) |
 
 - **Key challenge:** Estimating missing potential outcomes.
 
@@ -175,12 +171,12 @@ format:
 
 # Estimating Causal Effects
 
-### Common Strategies:
-1. **Randomized Experiments** (RCTs)
-2. **Matching Methods**
-3. **Difference-in-Differences (DiD)**
-4. **Instrumental Variables (IV)**
-5. **Regression Discontinuity (RD)**
+**Common Strategies:**
+
+1. **Matching Methods**
+2. **Difference-in-Differences (DiD)**
+3. **Instrumental Variables (IV)**
+4. **Regression Discontinuity (RD)**
 
 We'll explore these in later sessions!
 
@@ -474,7 +470,7 @@ ggdag(dag, text_size = 10, node_size = 14) + theme_dag() +
 - **Goal:** Estimate causal effects without bias.
 
 
-# Estimands in Causal Inference
+# Common Estimands in Causal Inference
 
 
 ::: {.incremental}
@@ -484,7 +480,7 @@ ggdag(dag, text_size = 10, node_size = 14) + theme_dag() +
 
 - **ATT (Average Treatment Effect on the Treated):**
   - The average causal effect of treatment on the treated units.
-  - $ATT = E[Y(1) - Y(0) | T = 1]
+  - $ATT = E[Y(1) - Y(0) | T = 1]$
 
 - **LATE (Local Average Treatment Effect):**
   - The causal effect of treatment for compliers in an IV setting.
@@ -785,7 +781,58 @@ Github Repository: [Causal Inference Methods for Observational Data](https://git
 
 # Let's switch to R 
 
-This notebook is available in the Github repository `Code` folder titled `DID_notebook.qmd`
+This notebook is available in the Github repository `Code` folder titled [`DID_notebook.qmd`](https://github.com/z-dickson/my580-causal-inference/blob/main/code/DID_notebook.qmd)
+
+**Note:** You will need to download the .qmd file and open it in RStudio to run the code.
 
 
 
+
+# Summary
+
+- **Difference-in-Differences (DiD):**
+  - Compare changes in outcomes over time between treated and control groups.
+  - Assumptions: Parallel Trends, Common Shocks, Stable Treatment, No Spillovers, No Anticipation.
+  - Estimating the causal effect: DiD estimator.
+
+
+# Summary of the Day 
+
+- **Potential Outcomes Framework:**
+  - Defines causal effects in terms of potential outcomes.
+  - The fundamental problem of causal inference.
+
+- **Directed Acyclic Graphs (DAGs):**
+  - Visual tool for representing causal relationships.
+  - Identify sources of bias in observational studies.
+
+- **Causal Identification in Observational Studies:**
+  - Methods for estimating causal effects without bias.
+  - Difference-in-Differences, Regression Discontinuity, Instrumental Variables.
+
+- **Estimating Causal Effects in Observational Studies:**
+  - A lot more challenging than in experiments.
+  - Requires careful attention to assumptions and methods.
+
+
+# Additional Resources
+
+- [The Effect: An Introduction to Research Design and Causality by Nick Huntington-Klein](https://theeffectbook.net/)
+- [(Mostly Clinical) Epidemiology with R by James Brophy](https://bookdown.org/jbrophy115/bookdown-clinepi/)
+- [What if? by Hernan and Robins](https://miguelhernan.org/whatifbook)
+- [Causal Inference: The Mixtape by Scott Cunningham](https://mixtape.scunning.com/)
+
+
+# Questions? 
+
+
+- Feel free to ask any questions you have about the material we've covered today.
+
+
+# Thank you! 
+
+Reach out if you have further questions - [z.dickson@lse.ac.uk](mailto:z.dickson@lse.ac.uk)
+
+
+
+# References

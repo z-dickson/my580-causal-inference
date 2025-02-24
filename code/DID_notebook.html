@@ -111,11 +111,11 @@ window.Quarto = {
 
 <section id="difference-in-differences-did-analysis" class="level1">
 <h1>Difference-in-Differences (DID) Analysis</h1>
-<p>In this notebook, we we estimate the effect of Trump’s calls for liberation in three specific states on compliance with state lockdown restrictions using a Difference-in-Differences (DID) approach. We use data from the Google Mobility Report and the New York Times COVID-19 dataset. The original study is by Dickson &amp; Hobolt in APSR (2024).</p>
+<p>In this notebook, we we estimate the effect of Trump’s calls for liberation in three specific states on compliance with state lockdown restrictions using a Difference-in-Differences (DID) approach. The authors compare Republican counties in the treated and control states. We use data from the Google Mobility Reports. The original study is by Dickson &amp; Hobolt in APSR (2024).</p>
 </section>
 <section id="first-we-install-the-necessary-libraries-and-load-the-data" class="level1">
 <h1>First we install the necessary libraries and load the data</h1>
-<p>The data can be downloaded from Github <a href="https://github.com/z-dickson/my580-causal-inference/data/us_mobility.csv">here</a>.</p>
+<p>The data can be downloaded from Github <a href="https://github.com/z-dickson/my580-causal-inference/data/google_mobility_data.csv">here</a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install libraries (if not already installed)</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("tidyverse")</span></span>
@@ -140,14 +140,16 @@ window.Quarto = {
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load data from Github  </span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://github.com/z-dickson/my580-causal-inference/raw/refs/heads/main/data/us_mobility.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#data &lt;- read_csv("https://github.com/z-dickson/my580-causal-inference/data/google_mobility_data.csv")</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../data/google_mobility_data.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Rows: 39195 Columns: 9
+<pre><code>Rows: 14631 Columns: 17
 ── Column specification ────────────────────────────────────────────────────────
 Delimiter: ","
-chr  (2): state, county
-dbl  (6): retail_and_recreation_percent_change_from_baseline, grocery_and_ph...
-date (1): date
+chr   (3): state_name, state_governor_party, winning_party
+dbl  (13): county, retail_and_recreation_mobility, grocery_and_pharmacy_mobi...
+date  (1): date
 
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
@@ -155,61 +157,68 @@ date (1): date
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># print the first few rows</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 9
-  state   county        date       retail_and_recreatio…¹ grocery_and_pharmacy…²
-  &lt;chr&gt;   &lt;chr&gt;         &lt;date&gt;                      &lt;dbl&gt;                  &lt;dbl&gt;
-1 Alabama Autauga Coun… 2020-04-10                    -30                     12
-2 Alabama Autauga Coun… 2020-04-11                    -37                     16
-3 Alabama Autauga Coun… 2020-04-12                    -55                    -51
-4 Alabama Autauga Coun… 2020-04-13                    -22                     -3
-5 Alabama Autauga Coun… 2020-04-14                    -23                      0
-6 Alabama Autauga Coun… 2020-04-15                    -11                      8
-# ℹ abbreviated names: ¹​retail_and_recreation_percent_change_from_baseline,
-#   ²​grocery_and_pharmacy_percent_change_from_baseline
-# ℹ 4 more variables: parks_percent_change_from_baseline &lt;dbl&gt;,
-#   transit_stations_percent_change_from_baseline &lt;dbl&gt;,
-#   workplaces_percent_change_from_baseline &lt;dbl&gt;,
-#   residential_percent_change_from_baseline &lt;dbl&gt;</code></pre>
+<pre><code># A tibble: 6 × 17
+  county date       state_name retail_and_recreation_mo…¹ grocery_and_pharmacy…²
+   &lt;dbl&gt; &lt;date&gt;     &lt;chr&gt;                           &lt;dbl&gt;                  &lt;dbl&gt;
+1   1001 2020-04-10 Alabama                           -30                     12
+2   1001 2020-04-11 Alabama                           -37                     16
+3   1001 2020-04-12 Alabama                           -55                    -51
+4   1001 2020-04-13 Alabama                           -22                     -3
+5   1001 2020-04-14 Alabama                           -23                      0
+6   1001 2020-04-15 Alabama                           -11                      8
+# ℹ abbreviated names: ¹​retail_and_recreation_mobility,
+#   ²​grocery_and_pharmacy_mobility
+# ℹ 12 more variables: parks_mobility &lt;dbl&gt;, transit_mobility &lt;dbl&gt;,
+#   workplaces_mobility &lt;dbl&gt;, residential_mobility &lt;dbl&gt;, fips &lt;dbl&gt;,
+#   state_governor_party &lt;chr&gt;, cases_x &lt;dbl&gt;, deaths_x &lt;dbl&gt;, dem_votes &lt;dbl&gt;,
+#   rep_votes &lt;dbl&gt;, total_votes &lt;dbl&gt;, winning_party &lt;chr&gt;</code></pre>
 </div>
 </div>
 </section>
 <section id="data-cleaning" class="level1">
 <h1>Data Cleaning</h1>
-<p>Usually, we would need to clean the data before we can use it for analysis. However, the data is already clean and ready for analysis.</p>
-<p>Let’s check the columns in the data.</p>
+<p>Usually, we would need to clean the data before we can use it for analysis. However, the data is already mostly clean. We will make some key adjustments to for demonstration purposes.</p>
+</section>
+<section id="lets-create-a-column-for-aggregate_mobility" class="level1">
+<h1>Let’s create a column for <code>aggregate_mobility</code></h1>
+<p>In the analysis, we will use an aggregate measure of mobility that combines all types of mobility (e.g., retail, grocery, parks, etc.). We will create a new column called <code>aggregate_mobility</code> that sums up all the mobility measures for each observation.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># what columns are in the data?</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "state"                                             
-[2] "county"                                            
-[3] "date"                                              
-[4] "retail_and_recreation_percent_change_from_baseline"
-[5] "grocery_and_pharmacy_percent_change_from_baseline" 
-[6] "parks_percent_change_from_baseline"                
-[7] "transit_stations_percent_change_from_baseline"     
-[8] "workplaces_percent_change_from_baseline"           
-[9] "residential_percent_change_from_baseline"          </code></pre>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create variable for aggregate mobility by adding all the mobility variables </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>aggregate_mobility <span class="ot">=</span> data<span class="sc">$</span>retail_and_recreation_mobility <span class="sc">+</span> data<span class="sc">$</span>grocery_and_pharmacy_mobility <span class="sc">+</span> data<span class="sc">$</span>parks_mobility <span class="sc">+</span> data<span class="sc">$</span>transit_mobility <span class="sc">+</span> data<span class="sc">$</span>workplaces_mobility <span class="sc">+</span> data<span class="sc">$</span>residential_mobility</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># check the new column</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(data<span class="sc">$</span>aggregate_mobility)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="DID_notebook_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
-<section id="lets-identify-the-treatment-and-control-groups" class="level1">
-<h1>Let’s identify the treatment and control groups</h1>
+<section id="lets-create-a-column-for-the-treatment-and-control-groups" class="level1">
+<h1>Let’s create a column for the treatment and control groups</h1>
 <p>The treatment group is the states where Trump called for liberation (Michigan, Minnesota, and Virginia) and the control group is the states where he did not (all other states).</p>
-<p><strong>Note</strong>: In the actual study, the treatment group is defined as the states where Trump called for liberation and the control group is the states that were under the same lockdown restrictions but were not targeted in Trump’s calls for liberation. However, for simplicity, we will use the above definition. The results are similar in both cases.</p>
+<p><strong>Note</strong>: In the actual study, the treatment group is defined as the states where Trump called for liberation and the control group is the states that were under the same lockdown restrictions but were not targeted in Trump’s calls for liberation. We’ll subset the data so that only Republican states are included in the analysis.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a variable for treatment and control groups</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>targeted_states <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Michigan"</span>, <span class="st">"Minnesota"</span>, <span class="st">"Virginia"</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">treatment =</span> <span class="fu">ifelse</span>(state <span class="sc">%in%</span> targeted_states, <span class="dv">1</span>, <span class="dv">0</span>))</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># check the treatment variable</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(data<span class="sc">$</span>treatment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a variable for treatment and control groups</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>targeted_states <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Michigan"</span>, <span class="st">"Minnesota"</span>, <span class="st">"Virginia"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">treatment =</span> <span class="fu">ifelse</span>(state_name <span class="sc">%in%</span> targeted_states, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># subset the data to include only Republican states</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#data &lt;- data %&gt;%</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#  filter(winning_party == "REPUBLICAN")</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># check the treatment variable</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(data<span class="sc">$</span>treatment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     0     1 
-35058  4137 </code></pre>
+12938  1693 </code></pre>
 </div>
 </div>
 </section>
@@ -217,14 +226,14 @@ date (1): date
 <h1>Let’s create the pre-post and treatment-control variables</h1>
 <p>The pre-post variable indicates whether the observation is before or after Trump’s calls for liberation. Trump’s messages were on April 17, 2020, so we will use that as the cutoff date.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a variable for pre-post and treatment-control</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pre_post =</span> <span class="fu">ifelse</span>(date <span class="sc">&lt;</span> <span class="st">"2020-04-17"</span>, <span class="dv">0</span>, <span class="dv">1</span>))</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># check the pre-post and treatment-control variables - we'll print all the dates that appear in the data when the pre_post variable is 1</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(data[data<span class="sc">$</span>pre_post <span class="sc">==</span> <span class="dv">1</span>, <span class="st">'date'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a variable for pre-post and treatment-control</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">post =</span> <span class="fu">ifelse</span>(date <span class="sc">&lt;</span> <span class="st">"2020-04-17"</span>, <span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># check the pre-post and treatment-control variables - we'll print all the dates that appear in the data when the pre_post variable is 1</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(data[data<span class="sc">$</span>post <span class="sc">==</span> <span class="dv">1</span>, <span class="st">'date'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 8 × 1
+<pre><code># A tibble: 7 × 1
   date      
   &lt;date&gt;    
 1 2020-04-17
@@ -233,8 +242,7 @@ date (1): date
 4 2020-04-20
 5 2020-04-21
 6 2020-04-22
-7 2020-04-23
-8 2020-04-24</code></pre>
+7 2020-04-23</code></pre>
 </div>
 </div>
 </section>
@@ -267,32 +275,27 @@ date (1): date
 <h1>Estimating the model</h1>
 <p>There are many ways to estimate a DID model. Here, we will use the <code>fixest</code> package in R.</p>
 <p><code>Fixest</code> syntax using a <code>|</code> to separate the fixed effects from the rest of the formula. Our syntax will look like the following:</p>
-<p>Our <span class="math inline">\(Y_{it}\)</span> is mobility (<code>retail_and_recreation_percent_change_from_baseline</code>) in county <span class="math inline">\(i\)</span> (<code>county</code>) on day <span class="math inline">\(t\)</span> (<code>date</code>).</p>
+<p>Our <span class="math inline">\(Y_{it}\)</span> is mobility (<code>aggregate_mobility</code>) in county <span class="math inline">\(i\)</span> (<code>county</code>) on day <span class="math inline">\(t\)</span> (<code>date</code>).</p>
 <p>We will cluster the standard errors at the county level to account for potential correlation within counties.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># estimate the DID model</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>did_model <span class="ot">&lt;-</span> <span class="fu">feols</span>(<span class="at">fml =</span> retail_and_recreation_percent_change_from_baseline <span class="sc">~</span> treatment <span class="sc">*</span> pre_post <span class="sc">|</span> county <span class="sc">+</span> date, <span class="at">data =</span> data, <span class="at">vcov =</span> <span class="sc">~</span> county)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># estimate the DID model</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>did_model <span class="ot">&lt;-</span> <span class="fu">feols</span>(<span class="at">fml =</span> aggregate_mobility <span class="sc">~</span> treatment <span class="sc">*</span> post <span class="sc">|</span> county <span class="sc">+</span> date, <span class="at">data =</span> data, <span class="at">vcov =</span> <span class="sc">~</span> county)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>NOTE: 18,712 observations removed because of NA values (LHS: 18,712).</code></pre>
+<pre><code>The variables 'treatment' and 'post' have been removed because of collinearity (see $collin.var).</code></pre>
 </div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The variable 'pre_post' has been removed because of collinearity (see $collin.var).</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(did_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(did_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>OLS estimation
-Dep. Var.: retail_and_recreation_percent_change_from_baseline
-Observations: 20,483
-Fixed-effects: county: 1,049,  date: 15
+<pre><code>OLS estimation, Dep. Var.: aggregate_mobility
+Observations: 14,631
+Fixed-effects: county: 1,046,  date: 14
 Standard-errors: Clustered (county) 
-                   Estimate Std. Error  t value   Pr(&gt;|t|)    
-treatment          -3.90658   2.042606 -1.91255 0.05607841 .  
-treatment:pre_post  1.09614   0.295194  3.71330 0.00021535 ***
-... 1 variable was removed because of collinearity (pre_post)
+               Estimate Std. Error t value  Pr(&gt;|t|)    
+treatment:post  6.16538    2.06499 2.98568 0.0028954 ** 
+... 2 variables were removed because of collinearity (treatment and post)
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-RMSE: 7.42013     Adj. R2: 0.740993
-                Within R2: 0.004395</code></pre>
+RMSE: 28.6     Adj. R2: 0.758803
+             Within R2: 0.001191</code></pre>
 </div>
 </div>
 </section>
@@ -300,44 +303,229 @@ RMSE: 7.42013     Adj. R2: 0.740993
 <h1>Interpretation of the results</h1>
 <p>The coefficient of the interaction term <code>treatment * pre_post</code> in the model output is the estimated causal effect of Trump’s calls for liberation on compliance with state lockdown restrictions, given that our model is specified correctly and the assumptions of the DID approach hold.</p>
 <p>The coefficient of the interaction term is the difference-in-differences estimate. It tells us how much the treatment group (states where Trump called for liberation) changed relative to the control group (states where he did not) after the treatment (Trump’s calls for liberation) compared to before the treatment.</p>
-<p>The coefficient estimate is the <strong>cumulative effect</strong> of the treatment over the post-treatment period. Because the ‘post-treatment’ period in the data covers 1-week, the coefficient estimate is the cumulative effect of the treatment over that 1-week period. Hence, the cumulative ATT is about 1 percentage point, given that the outcome variable is in percentage points.</p>
+<p>The coefficient estimate is the <strong>cumulative effect</strong> of the treatment over the post-treatment period. Because the ‘post-treatment’ period in the data covers 1-week, the coefficient estimate is the cumulative effect of the treatment over that 1-week period. Hence, the cumulative ATT is about 6 percentage point, given that the outcome variable is in percentage points.</p>
 </section>
 <section id="what-if-we-want-to-estimate-the-dynamic-effects-of-the-treatment-over-time" class="level1">
 <h1>What if we want to estimate the dynamic effects of the treatment over time?</h1>
 <p>One of the key advantages to DiD is that we can estimate the dynamic effects of the treatment over time. This is typically referred to as the <em>event study</em> approach. Many libraries in R can help us estimate the event study approach. Here, we will use the <code>fixest</code> package to estimate the event study approach.</p>
+<p>There are a few things we need to do to prepare the data. First, we need to convert the date variable to an integer. This is because the <code>Fixest</code> library uses a format where the holdout date is specified as an integer.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convert the date variable to an integer</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>date_int <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(<span class="fu">as.factor</span>(data<span class="sc">$</span>date))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># check the data by printing a dictionary of the date and the date_int variables</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(data[<span class="fu">c</span>(<span class="st">'date'</span>, <span class="st">'date_int'</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 14 × 2
+   date       date_int
+   &lt;date&gt;        &lt;int&gt;
+ 1 2020-04-10        1
+ 2 2020-04-11        2
+ 3 2020-04-12        3
+ 4 2020-04-13        4
+ 5 2020-04-14        5
+ 6 2020-04-15        6
+ 7 2020-04-16        7
+ 8 2020-04-17        8
+ 9 2020-04-18        9
+10 2020-04-19       10
+11 2020-04-20       11
+12 2020-04-21       12
+13 2020-04-22       13
+14 2020-04-23       14</code></pre>
+</div>
+</div>
+</section>
+<section id="estimating-the-event-study-model" class="level1">
+<h1>Estimating the event study model</h1>
+<p>We’ll use April 17 – the date of the messages – as the holdout period. This means that the holdout period will be 8 (see above).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># estimate the event study model</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>event_study <span class="ot">&lt;-</span> <span class="fu">feols</span>(<span class="at">fml =</span> retail_and_recreation_percent_change_from_baseline <span class="sc">~</span> <span class="fu">i</span>(date, treatment, <span class="st">'2020-04-16'</span>) <span class="sc">|</span> county <span class="sc">+</span> date, <span class="at">data =</span> data, <span class="at">vcov =</span> <span class="sc">~</span> county)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>NOTE: 18,712 observations removed because of NA values (LHS: 18,712).</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(event_study)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>event_study <span class="ot">&lt;-</span> <span class="fu">feols</span>(<span class="at">fml =</span> aggregate_mobility <span class="sc">~</span> <span class="fu">i</span>(date_int, treatment, <span class="at">ref =</span> <span class="dv">7</span>) <span class="sc">|</span> county <span class="sc">+</span> date_int, <span class="at">data =</span> data, <span class="at">vcov =</span> <span class="sc">~</span> county)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(event_study)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>OLS estimation
-Dep. Var.: retail_and_recreation_percent_change_from_baseline
-Observations: 20,483
-Fixed-effects: county: 1,049,  date: 15
+<pre><code>OLS estimation, Dep. Var.: aggregate_mobility
+Observations: 14,631
+Fixed-effects: county: 1,046,  date_int: 14
 Standard-errors: Clustered (county) 
-                            Estimate Std. Error   t value  Pr(&gt;|t|)    
-date::2020-04-10:treatment -3.514778    2.05672 -1.708922 0.0877615 .  
-date::2020-04-11:treatment -1.427916    2.13119 -0.670010 0.5029988    
-date::2020-04-12:treatment -3.990650    2.06810 -1.929620 0.0539237 .  
-date::2020-04-13:treatment -5.208723    2.01119 -2.589872 0.0097343 ** 
-date::2020-04-14:treatment -4.991849    2.09423 -2.383619 0.0173206 *  
-date::2020-04-15:treatment -5.652687    2.12496 -2.660140 0.0079301 ** 
-date::2020-04-16:treatment -3.095445    2.09650 -1.476479 0.1401157    
-date::2020-04-17:treatment -3.278565    2.13168 -1.538020 0.1243456    
-date::2020-04-18:treatment -2.371208    2.08873 -1.135240 0.2565344    
-date::2020-04-19:treatment  0.872045    2.08339  0.418571 0.6756157    
-date::2020-04-20:treatment -5.057254    1.91906 -2.635280 0.0085309 ** 
-date::2020-04-21:treatment -4.062593    2.11303 -1.922637 0.0547964 .  
-date::2020-04-22:treatment -1.585890    2.11688 -0.749163 0.4539274    
-date::2020-04-23:treatment -3.143634    2.01710 -1.558489 0.1194192    
-date::2020-04-24:treatment -3.625107    2.00824 -1.805118 0.0713431 .  
+                        Estimate Std. Error   t value   Pr(&gt;|t|)    
+date_int::1:treatment   3.664191    2.70302  1.355590 1.7552e-01    
+date_int::2:treatment  20.304885    4.30669  4.714734 2.7478e-06 ***
+date_int::3:treatment   7.805141    4.89645  1.594041 1.1123e-01    
+date_int::4:treatment  -3.694608    2.40172 -1.538320 1.2427e-01    
+date_int::5:treatment  -6.965171    2.15779 -3.227916 1.2857e-03 ** 
+date_int::6:treatment  -9.898072    2.03987 -4.852313 1.4060e-06 ***
+date_int::8:treatment   2.634199    2.89685  0.909331 3.6339e-01    
+date_int::9:treatment  19.571363    4.44091  4.407059 1.1559e-05 ***
+date_int::10:treatment 28.580718    4.80915  5.942985 3.8094e-09 ***
+date_int::11:treatment -4.058299    3.43856 -1.180231 2.3818e-01    
+date_int::12:treatment -0.570839    1.83237 -0.311531 7.5546e-01    
+date_int::13:treatment  7.004225    3.22118  2.174425 2.9897e-02 *  
+date_int::14:treatment  1.191841    2.66364  0.447448 6.5464e-01    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-RMSE: 7.40579     Adj. R2: 0.74182 
-                Within R2: 0.008242</code></pre>
+RMSE: 28.4     Adj. R2: 0.761797
+             Within R2: 0.01446 </code></pre>
+</div>
+</div>
+</section>
+<section id="plot-the-event-study-results" class="level1">
+<h1>Plot the event study results</h1>
+<p>We can plot the event study results to visualize the dynamic effects of the treatment over time. Using the <code>Fixest</code> library, we can use the <code>iplot</code> function to plot the event study results.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">iplot</span>(event_study)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="DID_notebook_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="how-can-we-improve-the-analysis" class="level1">
+<h1>How can we improve the analysis?</h1>
+<p>There are several ways to improve the analysis:</p>
+<ul>
+<li>Use a better estimator: While the fixed effects estimator is consistent and robust, it may not be the most efficient estimator. Other estimators, such as synthetic control, matrix completion, or other machine learning methods, may provide more precise estimates.</li>
+<li>Include more control variables: Adding more control variables can help reduce bias and improve the precision of the estimates.</li>
+<li>Check for parallel trends: The parallel trends assumption is crucial for the validity of the DID approach. Checking for parallel trends visually or using statistical tests can help ensure the validity of the estimates.</li>
+<li>Test for sensitivity: Conducting sensitivity analyses, such as placebo tests or robustness checks, can help assess the robustness of the estimates to different model specifications or assumptions.</li>
+</ul>
+</section>
+<section id="extension" class="level1">
+<h1>Extension</h1>
+<p>In Dickson &amp; Hobolt (2024), we use matrix completion methods to estimate a counterfactual using the data from the control states. We then compare the actual treatment effect to the counterfactual to estimate the causal effect of Trump’s calls for liberation. That’s beyond the scope of this notebook, but I’ll include the code below:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install packages if they are not already installed</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># List of package names to install</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>packages_to_install <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"fect"</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if each package is already installed</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (package_name <span class="cf">in</span> packages_to_install) {</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span>(package_name <span class="sc">%in%</span> <span class="fu">installed.packages</span>())) {</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If not installed, install the package</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">install.packages</span>(package_name)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fect)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered S3 method overwritten by 'GGally':
+  method from   
+  +.gg   ggplot2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a treatment variable that includes the interaction of treatment and post</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>treatment_post <span class="ot">&lt;-</span> data<span class="sc">$</span>treatment <span class="sc">*</span> data<span class="sc">$</span>post</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># function to estimate the matrix completion</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>estimate <span class="ot">&lt;-</span> <span class="cf">function</span>(data, formula) {</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fect</span>(<span class="at">data =</span> data,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">formula =</span> formula,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">method =</span> <span class="st">"mc"</span>, </span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">seed =</span> <span class="dv">42</span>,</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">index =</span> <span class="fu">c</span>(<span class="st">"county"</span>, <span class="st">"date_int"</span>),</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">r =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>),</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">k =</span> <span class="dv">10</span>,</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">CV =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">force =</span> <span class="st">"two-way"</span>,</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">nlambda =</span> <span class="dv">15</span>, </span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">se =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">parallel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>       <span class="at">cores =</span> <span class="dv">16</span>, <span class="co"># adjust accordingly </span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>       <span class="at">nboots =</span> <span class="dv">200</span>)</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a><span class="co"># estimate the matrix completion model</span></span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>full_state_aggregate <span class="ot">&lt;-</span> <span class="fu">estimate</span>(data, </span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>    aggregate_mobility <span class="sc">~</span> treatment_post)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Parallel computing ...</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cross-validating ...</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Criterion: Mean Squared Prediction Error</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Some units have too few pre-treatment observations. Remove them automatically in Cross-Validation.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Matrix completion method...</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+ lambda.norm = 1.00000; MSPE = 1159.02349; MSPTATT = 70.30134; MSE = 847.83330</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+ lambda.norm = 0.58780; MSPE = 941.43640; MSPTATT = 44.70158; MSE = 585.56447</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+ lambda.norm = 0.34551; MSPE = 801.87484; MSPTATT = 23.98195; MSE = 314.28532</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+ lambda.norm = 0.20309; MSPE = 785.19466; MSPTATT = 10.43137; MSE = 135.10648</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>*</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+ lambda.norm = 0.11938; MSPE = 785.38977; MSPTATT = 3.60446; MSE = 46.68507</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+ lambda.norm = 0.07017; MSPE = 785.63686; MSPTATT = 1.24571; MSE = 16.13390</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+ lambda.norm = 0.04125; MSPE = 786.09939; MSPTATT = 0.43064; MSE = 5.57675</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+
+ lambda.norm* = 0.203091762090474</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Bootstrapping for uncertainties ... </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>200 runs</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cannot use full pre-treatment periods in the F test. The first period is removed.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># print the results</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(full_state_aggregate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+fect.formula(formula = formula, data = data, index = c("county", 
+    "date_int"), force = "two-way", r = c(0, 5), nlambda = 15, 
+    CV = TRUE, k = 10, method = "mc", se = TRUE, nboots = 200, 
+    parallel = TRUE, cores = 16, seed = 42)
+
+ATT:
+                            ATT  S.E. CI.lower CI.upper   p.value
+Tr obs equally weighted   6.484 1.884    2.792    10.18 0.0005769
+Tr units equally weighted    NA 1.900       NA       NA        NA</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the results</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(full_state_aggregate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="DID_notebook_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
