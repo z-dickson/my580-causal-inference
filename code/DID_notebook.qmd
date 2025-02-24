@@ -1,0 +1,104 @@
+
+# Difference-in-Differences (DID) Analysis
+
+In this notebook, we we estimate the effect of Trump's calls for liberation in three specific states on compliance with state lockdown restrictions using a Difference-in-Differences (DID) approach. We use data from the Google Mobility Report and the New York Times COVID-19 dataset. The original study is by Dickson & Hobolt in APSR (2024). 
+
+
+# First we install the necessary libraries and load the data
+
+The data can be downloaded from Github [here](https://github.com/z-dickson/my580-causal-inference/data/us_mobility.csv).
+
+```{r}
+# install libraries (if not already installed)
+#install.packages("tidyverse")
+#install.packages("fixest")
+
+
+# load libraries 
+library(tidyverse) # for data manipulation
+library(fixest) # for fixed effects regression
+
+
+# load data from Github after downloading  
+data <- read_csv("data/us_mobility.csv")
+
+# print the first few rows
+head(data)
+```
+
+
+# Data Cleaning
+
+Usually, we would need to clean the data before we can use it for analysis. However, the data is already clean and ready for analysis.
+
+Let's check the columns in the data.
+
+```{r}
+# what columns are in the data?
+colnames(data)
+```
+
+# Let's identify the treatment and control groups 
+
+The treatment group is the states where Trump called for liberation (Michigan, Minnesota, and Virginia) and the control group is the states where he did not (all other states). 
+
+**Note**: In the actual study, the treatment group is defined as the states where Trump called for liberation and the control group is the states that were under the same lockdown restrictions but were not targeted in Trump's calls for liberation. However, for simplicity, we will use the above definition. The results are similar in both cases.
+
+```{r}
+# create a variable for treatment and control groups
+targeted_states <- c("Michigan", "Minnesota", "Virginia")
+
+data <- data %>%
+  mutate(treatment = ifelse(state %in% targeted_states, 1, 0))
+
+# check the treatment variable
+table(data$treatment)
+```
+
+
+# Let's create the pre-post and treatment-control variables
+
+The pre-post variable indicates whether the observation is before or after Trump's calls for liberation. Trump's messages were on April 17, 2020, so we will use that as the cutoff date.
+
+```{r}
+# create a variable for pre-post and treatment-control
+data <- data %>%
+  mutate(pre_post = ifelse(date < "2020-04-17", 0, 1))
+
+# check the pre-post and treatment-control variables - we'll print all the dates that appear in the data when the pre_post variable is 1
+unique(data[data$pre_post == 1, 'date'])
+```
+
+
+# Let's estimate the effect of Trump's calls for liberation on compliance with state lockdown restrictions using a Difference-in-Differences (DID) approach
+
+We will use a fixed effects regression model to estimate the effect of Trump's calls for liberation on compliance with state lockdown restrictions. The model is specified as follows:
+
+$$Y_{it} = \alpha_i + \lambda_t + \delta (\text{treated}_i * \text{post}_t) + \epsilon_{it}$$
+
+where: 
+
+- $Y_{it}$ = Mobility for state $i$ on day $t$
+- $\alpha_i$ = state fixed effects
+- $lambda_t$ = day fixed effects
+- $\delta$ = estimated causal effect of the treatment
+- $\text{treated}_i$ = indicator for treated states
+- $\text{post}_t$ = indicator for post-treatment period
+- $\epsilon_{it}$ = error term
+
+
+## A note on notation 
+
+It is worth mentioning that the equation above is effectively the same as the following: 
+
+$$Y_{it} = \alpha_i + \lambda_t + \delta \text{treatment}_{it} + \epsilon_{it}$$
+
+where $\text{treatment}_{it} = \text{treated}_i * \text{post}_t$.
+
+This is because the interaction term $\text{treated}_i * \text{post}_t$ is effectively creating a variable that is 1 for treated states in the post-treatment period and 0 otherwise. This is the essence of the Difference-in-Differences (DID) approach.
+
+This equation is also effectively the same as the following:
+
+$$Y_{it} = \beta_{0} \text{treated} + \beta_{1} \text{pre_post} + \delta (\text{treated}_i * \text{post}_t) + \epsilon_{it}$$
+
+Here, $\beta_{0}$ captures the average outcome for the control group before the treatment, $\beta_{1}$ captures the average change over time for the control group, and $\delta$ captures the effect of the treatment on the treated group.

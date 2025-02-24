@@ -765,28 +765,9 @@ where:
 
 
 
-# In R
-
-
-```{r}
-
-# install libraries (if not already installed)
-
-#install.packages("tidyverse")
-#install.packages("fixest")
-#install.packages("nanoparquet")
-
-# load libraries 
-library(tidyverse) # for data manipulation
-library(fixest) # for fixed effects regression
+# Let's switch to R 
 
 
 
-# load data from Github after downloading  
-data <- read_csv("us_mobility.csv")
-
-# print the first few rows
-head(data)
-```
 
 
