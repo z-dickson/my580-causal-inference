@@ -1,19 +1,19 @@
 
 # Difference-in-Differences (DID) Analysis
 
-In this notebook, we we estimate the effect of Trump's calls for liberation in three specific states on compliance with state lockdown restrictions using a Difference-in-Differences (DID) approach. The authors compare Republican counties in the treated and control states. We use data from the Google Mobility Reports. The original study is by Dickson & Hobolt in APSR (2024). 
+In this notebook, we will estimate the effect of Trump's calls for liberation in three specific states on compliance with state lockdown restrictions using a Difference-in-Differences (DID) approach. In the article, Republican counties are compared in the treated and control states. We won't worry about that in this tutorial. Data are from the Google Mobility Reports.
 
 
 # First we install the necessary libraries and load the data
 
-The data can be downloaded from Github [here](https://github.com/z-dickson/my580-causal-inference/data/google_mobility_data.csv).
+The data can be downloaded from Github [here](https://github.com/z-dickson/my580-causal-inference/data/google_mobility_data.csv) or just read into the notebook from the URL below. 
 
 ```{r}
 
 # install packages if they are not already installed
 
 # List of package names to install
-packages_to_install <- c("fixest", "tidyverse")
+packages_to_install <- c("fixest", "tidyverse", 'panelView')
 
 # Check if each package is already installed
 for (package_name in packages_to_install) {
@@ -27,12 +27,13 @@ for (package_name in packages_to_install) {
 # load libraries 
 library(fixest) # for fixed effects regression
 library(tidyverse) # for data manipulation
+library(panelView) # for visualizing panel data
 ```
 
 
 ```{r}
-# load data from Github  (uncomment the line below to load the data from Github)
-#data <- read_csv("https://github.com/z-dickson/my580-causal-inference/data/google_mobility_data.csv")
+# load data from Github 
+#data <- read_csv("https://raw.githubusercontent.com/z-dickson/my580-causal-inference/refs/heads/main/data/google_mobility_data.csv")
 
 # or, load data from local file if you've cloned the repository
 data <- read_csv("../data/google_mobility_data.csv")
@@ -45,12 +46,12 @@ head(data)
 
 # Data Cleaning
 
-Usually, we would need to clean the data before we can use it for analysis. However, the data is already mostly clean. We will make some key adjustments to for demonstration purposes. 
+Usually, we would need to clean the data before we can use it for analysis. However, the data is already mostly clean. We will make some key adjustments for demonstration purposes. 
 
 
 # Let's create a column for `aggregate_mobility`
 
-In the analysis, we will use an aggregate measure of mobility that combines all types of mobility (e.g., retail, grocery, parks, etc.). We will create a new column called `aggregate_mobility` that sums up all the mobility measures for each observation.
+In the analysis, one of the outcomes is 'aggregate mobility', which is a measure of mobility that combines all types of mobility (e.g., retail, grocery, parks, etc.). We will create a new column called `aggregate_mobility` that sums up all the mobility measures for each observation.
 
 
 ```{r}
@@ -78,12 +79,8 @@ data <- data %>%
   mutate(treatment = ifelse(state_name %in% targeted_states, 1, 0))
 
 
-# subset the data to include only Republican states
-#data <- data %>%
-#  filter(winning_party == "REPUBLICAN")
-
 # check the treatment variable
-table(data$treatment)
+unique(data[data$treatment == 1, 'state_name'])
 ```
 
 
@@ -99,6 +96,29 @@ data <- data %>%
 # check the pre-post and treatment-control variables - we'll print all the dates that appear in the data when the pre_post variable is 1
 unique(data[data$post == 1, 'date'])
 ```
+
+
+# How can we further check to see if we correctly created the treatment and control groups?
+
+One option is to visualize the data using a library called `PanelView`. This library allows us to visualize the data in a panel format, which is useful for checking the balance of the treatment and control groups over time.
+
+```{r}
+
+# create a treated variable for visualization
+data$under_treatment <- data$post * data$treatment
+
+# plot the treatment trajectories over time
+panelview(aggregate_mobility ~ under_treatment, 
+          data = data, index = c("county","date"), 
+          xlab = "Year", ylab = "County", pre.post = TRUE)
+
+# we can also plot the outcomes according to treatment status 
+panelview(aggregate_mobility ~ under_treatment, 
+          data = data, index = c("county","date"),
+          color = c("lightblue", "red", "#99999950"), 
+          type = "outcome", xlab = "Year", ylab = "County", pre.post = TRUE)
+```
+
 
 
 
@@ -152,7 +172,7 @@ We will cluster the standard errors at the county level to account for potential
 # estimate the DID model
 did_model <- feols(fml = aggregate_mobility ~ treatment * post | county + date, data = data, vcov = ~ county)
 
-summary(did_model)
+etable(summary(did_model))
 ```
 
 
@@ -191,7 +211,7 @@ We'll use April 17 -- the date of the messages -- as the holdout period. This me
 # estimate the event study model
 event_study <- feols(fml = aggregate_mobility ~ i(date_int, treatment, ref = 7) | county + date_int, data = data, vcov = ~ county)
 
-summary(event_study)
+etable(summary(event_study))
 ```
 
 
