@@ -1,3 +1,14 @@
+---
+title: "MY580: DID Analysis Example"
+author: "Zach Dickson"
+date: "2/20/2025"
+format: 
+  html:
+    code-fold: false
+    number_sections: true
+    toc: false
+---
+
 
 # Difference-in-Differences (DID) Analysis
 
@@ -290,5 +301,6 @@ print(full_state_aggregate)
 
 # plot the results
 plot(full_state_aggregate)
+
 ```
 
