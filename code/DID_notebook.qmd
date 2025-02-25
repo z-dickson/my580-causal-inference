@@ -7,6 +7,7 @@ format:
     code-fold: false
     number_sections: true
     toc: false
+    embed-resources: true 
 ---
 
 
@@ -290,6 +291,7 @@ estimate <- function(data, formula) {
        nboots = 200)
 }
 
+
 # estimate the matrix completion model
 full_state_aggregate <- estimate(data, 
     aggregate_mobility ~ treatment_post)
@@ -301,6 +303,5 @@ print(full_state_aggregate)
 
 # plot the results
 plot(full_state_aggregate)
-
 ```
 
