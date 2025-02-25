@@ -22,7 +22,7 @@ format:
 
 
 
-# Schedule 
+# Schedule {.scrollable .smaller}
 
 - Potential Outcomes Framework
   - The Experimental Ideal
@@ -72,6 +72,8 @@ format:
 # Correlation vs. Causation
 
 
+::: {.incremental}
+
 - **Correlation**
   - A statistical measure that describes the extent to which two variables change together
   - Does not imply causation
@@ -80,18 +82,23 @@ format:
   - A relationship between two variables where one variable causes the other to change
   - Establishing causation requires careful study and analysis
 
+:::
 
 
 
 # What is Causal Inference?
 
-- Goal: Estimate the **causal effect** of a treatment, policy, or intervention.
+::: {.incremental}
+
+- **Goal:** Estimate the *causal effect* of a treatment, policy, or intervention.
 - **Key Question:** What would have happened if things had been different?
 - **Example:** Does a new economic policy increase employment?
 
-
+:::
 
 # Counterfactual Thinking
+
+::: {.incremental}
 
 - **Causal effects** are defined in terms of **potential outcomes**.
 - The **counterfactual** is what would have happened in an alternative scenario.
@@ -99,41 +106,51 @@ format:
   - You take a job training program → You get a higher salary.
   - **Counterfactual:** What would your salary have been if you had *not* taken the program?
 
-
-# Potential Outcomes Framework
-
-**“no causation without manipulation.”** 
-
--Rubin (1975)
-
+:::
 
 
 
 # Potential Outcomes Framework
 
+
+::: {.incremental}
 - Define treatment **T**:
   - **T = 1** (treated)
   - **T = 0** (control)
+
+
 - Define potential outcomes:
   - $Y(1)$ = Outcome if treated
   - $Y(0)$ = Outcome if not treated
 - **Causal Effect:**
   
   $$ ATE = Y(1) - Y(0) $$
-  
-- **Problem:** We can only observe one of these!
+
+::: 
+
+
+# So what's the problem?
+
+<br>
+
+  $$ ATE = Y(1) - Y(0) $$
 
 
 
 # The Fundamental Problem of Causal Inference
 
+::: {.incremental}
+
 - We never observe both $Y(1)$ and $Y(0)$ for the same unit.
 - This makes causal inference **challenging**.
 - **Solution:** Use statistical methods to approximate the counterfactual.
+- The better we can approximate the counterfactual, the more accurate our causal estimates will be.
 
-
+:::
 
 # Observed vs. Missing Data
+
+
 
 | Unit | Treated? (T) | Observed Outcome | Counterfactual Outcome |
 |------|-------------|-----------------|------------------------|
@@ -143,57 +160,120 @@ format:
 - **Key challenge:** Estimating missing potential outcomes.
 
 
+# How can we approximate the counterfactual? 
+
+::: {.incremental}
+
+- If we want to know what would happen if a unit was treated, we can compare it to similar units that were not treated.
+- **Assumption:** Units are similar in all respects except for the treatment.
+- **Challenge:** How do we know if units are similar?
+
+:::
+
+
 
 # The Experimental Ideal
 
-- **Randomized Experiments** (RCTs) are the gold standard for causal inference.
-- **Random Assignment:** Ensures that treatment is independent of potential outcomes.
-- **Counterfactuals:** Each unit has a well-defined counterfactual.
-- **Causal Effects:** Can be estimated without bias.
+Let's think about the ideal experiment: 
+
+::: {.incremental}
+
+- **Randomized Experiments:** Gold standard for causal inference.
+- When we are in control of the world, we can randomly assign treatment.
+  - **Random Assignment:** Ensures that treatment is independent of potential outcomes.
+  - **Counterfactuals:** Each unit has a well-defined counterfactual.
+  - **Causal Effects:** Can be estimated without bias.
 
 
-# Limitations of Experiments
+:::
+
+
+# The Randomized Controlled Trial (RCTs)
+
+
+::: {.incremental}
+
+In a randomized controlled trial (RCT):
+
+- Units are randomly assigned to treatment or control.
+- The treatment group receives the treatment, the control group does not.
+- The average treatment effect (ATE) is the difference in outcomes between the two groups.
+- $ATE = E[Y(1) - Y(0)]$
+
+
+:::
+
+
+
+# RCTs are not always feasible
+
+
+::: {.incremental}
 
 - **Ethical Concerns:** Not all research questions can be answered with experiments.
 - **Practical Concerns:** Experiments can be expensive, time-consuming, or infeasible.
 - **External Validity:** Findings from experiments may not generalize to other contexts.
 
+:::
+
+
+
 
 # Observational Studies
 
-- **Observational Studies:** Use naturally occurring variation to estimate causal effects.
-- **Challenges:**
-  - **Confounding:** Treatment and potential outcomes are correlated.
-  - **Selection Bias:** Treatment assignment is not random.
-  - **Endogeneity:** Treatment is influenced by the outcome.
+::: {.incremental}
 
+- **Observational Studies:** Research designs where treatment is not randomly assigned.
 
+  - **Example:** 
+    - **Treatment:** Job training program
+    - **Outcome:** Salary
+    - **Problem:** People who choose to take the program may be different from those who don't.
 
-# Estimating Causal Effects
+- **Key Challenge:** Estimating causal effects without bias.
 
-**Common Strategies:**
+:::
 
-1. **Matching Methods**
-2. **Difference-in-Differences (DiD)**
-3. **Instrumental Variables (IV)**
-4. **Regression Discontinuity (RD)**
+# Approximating the Experimental Ideal
 
-We'll explore these in later sessions!
+::: {.incremental}
+
+- Using what we know about the world, we can try to approximate the counterfactual.
+- **Assumption:** Units are similar in all respects except for the treatment.
+- **Methods:** 
+  - Matching
+  - Difference-in-Differences
+  - Instrumental Variables
+  - Regression Discontinuity.
+
+- We'll explore these in later sessions!
+
+:::
+
 
 
 
 # Summary
 
-- Causal inference helps answer "what if" questions.
+::: {.incremental}
+
+- Causal inference helps us answer "what if" questions about the world 
 - The **potential outcomes framework** defines causal effects.
-- The **fundamental problem** is that we never observe both potential outcomes.
-- Next session: **Causal Identification & Assumptions**.
+- The **fundamental problem of causal inference** is that we never observe both potential outcomes.
+- Next session: **Directed Acyclic Graphs & Bias**.
+
+:::
 
 
 
-# Thank You!
+
+# 10 minute break
+
+
 
 📌 Questions? Feel free to ask!
+
+
 
 
 
@@ -234,11 +314,15 @@ ggdag(dag, text_size = 10, node_size = 14) + theme_dag()
 
 # Directed Acyclic Graphs (DAGs)
 
+
+::: {.incremental}
+
 - Bias in [observational] studies:
   - **Confounding**
   - **Selection Bias/Endogeneity**
 - DAGs help identify these sources of bias.
 
+:::
 
 # DAGs 
 
@@ -303,6 +387,7 @@ source: Brophy (2021)
 
 # Confounding 
 
+::: {.incremental}
 
 - **Definition:** Confounding occurs when a third variable (a confounder) influences both the treatment and the outcome, creating a spurious association.
 
@@ -312,9 +397,12 @@ source: Brophy (2021)
 
 - Confounding is not based on statistical associations, but on qualitative knowledge of the data.
 
+:::
+
+# Confounding Example
 
 
-# Confounding 
+::: {.incremental}
 
 RQ: Does job training increase salary?
 
@@ -326,6 +414,7 @@ RQ: Does job training increase salary?
 
 - **Problem:** The treatment and outcome are correlated because of the confounder.
 
+:::
 
 # Confounding DAG 
 
@@ -344,7 +433,10 @@ ggdag(dag, text_size = 10, node_size = 14) + theme_dag() +
 
 
 
-# Selection Bias
+# Selection Bias/Endogeneity
+
+
+::: {.incremental}
 
 - **Definition:** Selection bias occurs when the sample used in the analysis is not representative of the population due to a non-random selection process
 
@@ -352,8 +444,11 @@ ggdag(dag, text_size = 10, node_size = 14) + theme_dag() +
 
 - **Effect:** Creates spurious associations between the treatment and outcome that do not reflect the true causal effect.
 
+:::
 
 # Selection Bias Example
+
+::: {.incremental}
 
 - **Example:** 
   - Treatment: Job Training Program
@@ -363,27 +458,53 @@ ggdag(dag, text_size = 10, node_size = 14) + theme_dag() +
 
 - Conditioning on a collider induces a spurious association between the treatment and outcome.
 
+::: 
+
+
+# Another Selection Bias Example
+
+::: {.incremental}
+
+- **Example:** 
+  - Treatment: Going to the doctor
+  - Outcome: Health
+  - Selection Bias: Only sick people go to the doctor
+
+- Conditioning on whether someone goes to the doctor induces a spurious association between going to the doctor and health.
+
+:::
 
 
 
 # Other forms of selection bias
+
+
+::: {.incremental}
 
 - **Survival Bias:** Only observing units that survive until the end of the study.
 - **Non-response Bias:** Only observing units that respond to the survey.
 - **Publication Bias:** Only observing studies that report significant results.
 - **Attrition Bias:** Only observing units that remain in the study.
 
+:::
 
 
 # Addressing Confounding 
 
+
+::: {.incremental}
+
 - We can condition on confounding variables to block backdoor paths.
 - **Conditioning:** Adjusting for confounders or selection variables in the analysis.
   - e.g. 'controlling for' or 'including' variables in a regression model.
+- We can't really 'control' for all confounders, but we can try to identify and adjust for the most important ones.
 
 
+:::
 
 # Addressing Selection Bias
+
+::: {.incremental}
 
 - This is more challenging than confounding because it is not based on pre-treatment variables
 
@@ -391,18 +512,19 @@ ggdag(dag, text_size = 10, node_size = 14) + theme_dag() +
   - **Randomized Experiments:** Random assignment ensures that treatment is independent of potential outcomes.
   - **Instrumental Variables:** Use an instrument to estimate the causal effect.
 
-
+:::
 
 # Activity 
 
   - Identify a research question of interest.
+    - If you can't think of one, ask me (or chatGPT) for suggestions!
   - Create a DAG that represents the causal relationships.
   - Identify potential sources of confounding or selection bias.
   - Think about how you would address these issues in your analysis.
 
 
 
-**Bonus:** Create a DAG
+**Bonus:** Create a DAG in `R` using the `dagitty` package and visualize it using `ggdag`. 
 
 
 
@@ -425,6 +547,8 @@ ggdag(dag, text_size = 10, node_size = 14) + theme_dag() +
 
 # Summary 
 
+::: {.incremental}
+
 - **Directed Acyclic Graphs (DAGs):**
   - Visual tool for representing causal relationships.
   - Help identify sources of bias in observational studies.
@@ -433,12 +557,16 @@ ggdag(dag, text_size = 10, node_size = 14) + theme_dag() +
   - A third variable influences both the treatment and outcome.
   - Distorts the causal effect.
 
-- **Selection Bias:**
+- **Selection Bias/Endogeneity:**
   - Non-random selection process creates spurious associations.
   - More challenging to address than confounding.
 
+:::
+
 
 # More on DAGs
+
+::: {.incremental}
 
 - **Resources:**
   - **The Effect: An Introduction to Research Design and Causality** by Nick Huntington-Klein
@@ -446,7 +574,7 @@ ggdag(dag, text_size = 10, node_size = 14) + theme_dag() +
   - **DAGitty:** Online tool for creating and analyzing DAGs
   - **ggdag:** R package for visualizing DAGs
 
-
+:::
 
 
 # Lunch Break
@@ -462,12 +590,17 @@ ggdag(dag, text_size = 10, node_size = 14) + theme_dag() +
 
 # Causal Identification in Observational Studies
 
+
+::: {.incremental}
+
 - **Causal Identification:** Estimating causal effects in observational studies.
 - **Common Methods:**
   - **Difference-in-Differences (DiD)**
   - **Regression Discontinuity (RD)**
   - **Instrumental Variables (IV)**
 - **Goal:** Estimate causal effects without bias.
+
+:::
 
 
 # Common Estimands in Causal Inference
@@ -494,24 +627,52 @@ ggdag(dag, text_size = 10, node_size = 14) + theme_dag() +
 
 # The Experimental Ideal (again)
 
+::: {.incremental}
+
 - **Randomized Experiments (RCTs):**
   - Gold standard for causal inference.
   - Random assignment ensures treatment is independent of potential outcomes.
   - Causal effects can be estimated without bias.
   - Estimates the ATE.
+- We want to keep returning to this ideal when designing observational studies.
 
-We want to keep returning to this ideal when designing observational studies.
+:::
+
+# The toolkit for causal inference in observational studies
+
+
+
+- Difference-in-Differences (DiD)
+- Regression Discontinuity (RD)
+- Instrumental Variables (IV)
+
 
 
 
 # Difference-in-Differences (DiD)
 
+::: {.incremental}
+
 - Workhorse of causal inference in economics and social sciences.
 - **Idea:** Compare changes in outcomes over time between treated and control groups.
 - **Estimand:** The average treatment effect of the treatment on the treated.
 
+
+
+
+<figure>
+  <img align="left" src="figures/did.png" alt="Trulli" style="width:65%">
+<br>
+</figure>
+
+
+:::
+
+
 # Difference-in-Differences (DiD) 
 
+
+::: {.incremental}
 
 - **Assumptions:**
   - **Parallel Trends:** Treated and control groups have parallel trends in the absence of treatment.
@@ -519,6 +680,8 @@ We want to keep returning to this ideal when designing observational studies.
   - **Stable Treatment:** Treatment does not change over time.
   - **No Spillovers:** Treatment does not affect control units.
   - **No Anticipation:** Units do not anticipate the treatment.
+
+::: 
 
 
 # DID Example 
@@ -555,22 +718,38 @@ The UK Government introduces a training programme to increase employment. The pr
 
 # Regression Discontinuity (RD)
 
+::: {.incremental}
+
+
 Many policies assign treatment based on a threshold. RD estimates causal effects by comparing outcomes just above and below the threshold.
 
 - **Idea:** Compare outcomes for units just above and below a [arbitrary] threshold.
 - **Key Assumption:** Units just above and below the threshold are similar in all other respects.
 - **Estimand:** Usually the LATE (Local Average Treatment Effect).
-  
+
+:::
+
+
+# Regression Discontinuity (RD)
+
+<figure>
+  <img align="left" src="figures/RDD.png" alt="Trulli" style="width:75%">
+<br>
+</figure>
 
 
 
 # Regression Discontinuity (RD)
+
+
+::: {.incremental}
 
 - **Assumptions:**
   - **Common Trend:** Units just above and below the threshold would have followed the same trend in the absence of the threshold.
   - **No Manipulation:** Units cannot manipulate the threshold to change treatment assignment.
   - **No Spillovers:** Treatment does not affect units on the other side of the threshold.
 
+:::
 
 
 # RD Example
@@ -605,20 +784,34 @@ The maximum number of students per seminar group at LSE is 30. We want to know w
 :::
 
 
-# Instrumental Variables (IV)
+# Instrumental Variable (IV)
 
 - **Idea:** Use an instrument to estimate the causal effect of treatment.
 - **Instrument:** A variable that affects treatment but is unrelated to the outcome.  
 - **Estimand:** LATE (Local Average Treatment Effect) for compliers.
 
 
-# Instrumental Variables (IV)
+# Instrumental Variable (IV)
+
+<br>
+
+<figure>
+  <img align="left" src="figures/IV.png" alt="Trulli" style="width:75%">
+<br>
+</figure>
+
+
+
+# Instrumental Variable (IV)
+
+::: {.incremental}
 
 - **Assumptions:**
   - **Relevance:** The instrument affects treatment.
   - **Exogeneity:** The instrument is unrelated to the outcome except through the treatment.
   - **Exclusion:** The instrument does not affect the outcome except through the treatment.
 
+:::
 
 # IV Example
 
@@ -639,6 +832,8 @@ There are many reasons why people choose to go to college, such as ability, moti
 - **Outcome:**
   - Earnings.
 :::
+
+
 
 # IV Example
 
@@ -695,6 +890,9 @@ There are many reasons why people choose to go to college, such as ability, moti
 
 # Difference-in-Differences (DiD) recap 
 
+
+::: {.incremental}
+
 - **Idea:** Compare changes in outcomes over time between treated and control groups.
 - **Assumptions:**
   - **Parallel Trends:** Treated and control groups have parallel trends in the absence of treatment.
@@ -703,7 +901,7 @@ There are many reasons why people choose to go to college, such as ability, moti
   - **No Spillovers:** Treatment does not affect control units.
   - **No Anticipation:** Units do not anticipate the treatment.
 
-
+:::
 
 # DiD Example 
 
@@ -790,13 +988,19 @@ This notebook is available in the Github repository `Code` folder titled [`DID_n
 
 # Summary
 
+::: {.incremental}
+
 - **Difference-in-Differences (DiD):**
   - Compare changes in outcomes over time between treated and control groups.
   - Assumptions: Parallel Trends, Common Shocks, Stable Treatment, No Spillovers, No Anticipation.
   - Estimating the causal effect: DiD estimator.
 
+::: 
 
 # Summary of the Day 
+
+
+::: {.incremental}
 
 - **Potential Outcomes Framework:**
   - Defines causal effects in terms of potential outcomes.
@@ -814,6 +1018,7 @@ This notebook is available in the Github repository `Code` folder titled [`DID_n
   - A lot more challenging than in experiments.
   - Requires careful attention to assumptions and methods.
 
+:::
 
 # Additional Resources
 
