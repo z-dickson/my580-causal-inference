@@ -143,7 +143,7 @@ format:
 
 - We never observe both $Y(1)$ and $Y(0)$ for the same unit.
 - This makes causal inference **challenging**.
-- **Solution:** Use statistical methods to approximate the counterfactual.
+- **Solution:** Use design or statistical methods to approximate the counterfactual.
 - The better we can approximate the counterfactual, the more accurate our causal estimates will be.
 
 :::
@@ -495,12 +495,23 @@ ggdag(dag, text_size = 10, node_size = 14) + theme_dag() +
 ::: {.incremental}
 
 - We can condition on confounding variables to block backdoor paths.
-- **Conditioning:** Adjusting for confounders or selection variables in the analysis.
+- **Conditioning:** Adjusting for confounders in the analysis.
   - e.g. 'controlling for' or 'including' variables in a regression model.
 - We can't really 'control' for all confounders, but we can try to identify and adjust for the most important ones.
 
 
+
 :::
+
+# Addressing Confounding
+
+
+<figure>
+  <img align="left" src="figures/selection_bias.png" alt="Trulli" style="width:75%">
+<br>
+</figure>
+
+
 
 # Addressing Selection Bias
 
