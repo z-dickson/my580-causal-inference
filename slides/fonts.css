@@ -1,0 +1,14 @@
+/* Inter (text) and Inter Display (headings), subset to Latin + punctuation, woff2.
+   JetBrains Mono (code), Latin subset from Google Fonts. All bundled in fonts/
+   so the deck renders identically offline and with embed-resources: true. */
+@font-face { font-family: "Inter"; font-weight: 400; font-style: normal; src: url("fonts/Inter-Regular.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 400; font-style: italic; src: url("fonts/Inter-Italic.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 500; font-style: normal; src: url("fonts/Inter-Medium.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 600; font-style: normal; src: url("fonts/Inter-SemiBold.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 600; font-style: italic; src: url("fonts/Inter-SemiBoldItalic.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 700; font-style: normal; src: url("fonts/Inter-SemiBold.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 700; font-style: italic; src: url("fonts/Inter-SemiBoldItalic.woff2") format("woff2"); }
+@font-face { font-family: "Inter Display"; font-weight: 500; font-style: normal; src: url("fonts/InterDisplay-Medium.woff2") format("woff2"); }
+@font-face { font-family: "Inter Display"; font-weight: 600; font-style: normal; src: url("fonts/InterDisplay-SemiBold.woff2") format("woff2"); }
+@font-face { font-family: "JetBrains Mono"; font-weight: 400; font-style: normal; src: url("fonts/JetBrainsMono-400.woff2") format("woff2"); }
+@font-face { font-family: "JetBrains Mono"; font-weight: 500; font-style: normal; src: url("fonts/JetBrainsMono-500.woff2") format("woff2"); }

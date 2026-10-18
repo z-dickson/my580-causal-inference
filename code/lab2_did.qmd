@@ -1,0 +1,394 @@
+---
+title: "MY580 Lab 2: Difference-in-Differences"
+author: "Zach Dickson"
+format:
+  html:
+    code-fold: false
+    number-sections: true
+    toc: true
+    embed-resources: true
+---
+
+
+# Overview
+
+In April 2020, at the height of the COVID-19 pandemic, Donald Trump tweeted calls to "LIBERATE" three states that were under lockdown: **Michigan, Minnesota and Virginia**. Did these messages reduce compliance with lockdown restrictions?
+
+We can't run an experiment on presidential tweets, so we use a **difference-in-differences (DiD)** design. We compare the *change* in mobility in targeted states with the *change* in mobility in non-targeted states over the same period. Data are county-level Google COVID-19 Community Mobility Reports, 10–23 April 2020.
+
+In Dickson & Hobolt (2024), Republican counties are compared across treated and control states. We'll start with all counties and come back to that in a "Your turn" exercise.
+
+We will:
+
+0. *(Warm-up)* Draw the DAG for this design
+1. Load the data and build the treatment and post-period indicators
+2. Plot pre-treatment trends
+3. Estimate a 2×2 DiD by hand and with regression
+4. Estimate an event study
+
+Look for the **✏️ Your turn** prompts.
+
+
+# Setup
+
+```{r}
+#| message: false
+# install packages if they are not already installed
+packages_to_install <- c("fixest", "tidyverse", "panelView", "dagitty", "ggdag")
+
+for (package_name in packages_to_install) {
+  if (!(package_name %in% installed.packages())) {
+    install.packages(package_name)
+  }
+}
+
+library(fixest)    # for fixed effects regression
+library(tidyverse) # for data manipulation
+library(panelView) # for visualizing panel data
+library(dagitty)   # for specifying DAGs
+library(ggdag)     # for plotting DAGs
+```
+
+
+# Warm-up (optional): The DAG
+
+Before touching data, let's write down our assumptions. Targeted states might differ from other states in ways that also affect mobility: for example, partisanship or how strict their lockdowns were. Mobility also changes over time for everyone, e.g. as lockdown fatigue sets in. And *when* the tweets happen is itself a feature of time: treatment only switches on after 17 April.
+
+```{r}
+#| warning: false
+dag <- dagitty('dag {
+  Tweets -> Mobility
+  StateTraits -> Tweets
+  StateTraits -> Mobility
+  Time -> Tweets
+  Time -> Mobility
+}')
+
+ggdag(dag, text = FALSE, use_labels = "name") + theme_dag()
+```
+
+There are two back-door paths: `Tweets <- StateTraits -> Mobility` and `Tweets <- Time -> Mobility`. `dagitty` can tell us what we need to adjust for to close them:
+
+```{r}
+adjustmentSets(dag, exposure = "Tweets", outcome = "Mobility")
+```
+
+We can't measure every state trait. DiD gets around this by comparing each unit **with itself** over time: anything about a county that is fixed across our two weeks cancels out (county fixed effects close the first path). Comparing with control counties on the same day removes common shocks over time (day fixed effects close the second). What DiD *can't* handle is something that changes differently over time in treated and control states. That is the **parallel trends** assumption.
+
+
+# Load the data
+
+The data can be read directly from GitHub, or from your local copy if you've cloned the repository.
+
+```{r}
+#| message: false
+# load data from GitHub
+# data <- read_csv("https://raw.githubusercontent.com/z-dickson/my580-causal-inference/main/data/google_mobility_data.csv")
+
+# or, load data from local file if you've cloned the repository
+data <- read_csv("../data/google_mobility_data.csv")
+
+head(data)
+```
+
+Each row is a **county on a day**: `r n_distinct(data$county)` counties observed for `r n_distinct(data$date)` days.
+
+
+# Data preparation
+
+## Outcome: aggregate mobility
+
+Our outcome is **aggregate mobility**: the sum of the five "out-of-home" Google mobility measures (retail, grocery, parks, transit and workplaces) **minus** residential mobility (time spent at home, which *rises* when people comply). Each measure is the percentage change relative to a pre-pandemic baseline. Higher values mean more movement, i.e. *less* compliance with lockdown.
+
+::: {.callout-note}
+## A note on data quality
+
+Google suppresses values when there is too little data, and in this file those appear as **0**. Parks and transit are zero in a large share of rows, while retail and workplaces are never zero. Real research would treat these as missing. Try the DiD with retail + workplaces only and see whether the conclusion changes.
+:::
+
+```{r}
+data <- data %>%
+  mutate(aggregate_mobility = retail_and_recreation_mobility + grocery_and_pharmacy_mobility +
+           parks_mobility + transit_mobility + workplaces_mobility - residential_mobility)
+
+# how often is each measure exactly zero?
+data %>%
+  summarise(across(ends_with("_mobility") & !starts_with("aggregate"), ~ mean(.x == 0)))
+
+ggplot(data, aes(x = aggregate_mobility)) +
+  geom_histogram(bins = 50) +
+  labs(x = "Aggregate mobility", y = "Count") +
+  theme_minimal()
+```
+
+## Treatment and post-period indicators
+
+The **treatment group** is the counties in the three targeted states. The **control group** is the counties in the other 36 states in our data.
+
+```{r}
+targeted_states <- c("Michigan", "Minnesota", "Virginia")
+
+data <- data %>%
+  mutate(treatment = ifelse(state_name %in% targeted_states, 1, 0))
+
+# check the treatment variable
+data %>% filter(treatment == 1) %>% distinct(state_name)
+```
+
+Trump's messages were sent on **17 April 2020**, so the **post** period starts that day.
+
+```{r}
+data <- data %>%
+  mutate(post = ifelse(date < as.Date("2020-04-17"), 0, 1))
+
+# check: which dates are in the post period?
+data %>% filter(post == 1) %>% distinct(date)
+```
+
+The DiD treatment indicator is 1 only for **treated counties in the post period**:
+
+```{r}
+#| warning: false
+#| message: false
+data <- data %>%
+  mutate(under_treatment = treatment * post)
+
+# visualize treatment status over time for every county
+panelview(aggregate_mobility ~ under_treatment,
+          data = data, index = c("county", "date"),
+          xlab = "Date", ylab = "County", pre.post = TRUE)
+```
+
+
+# Visualize the trends
+
+The key DiD assumption is **parallel trends**: *without* the tweets, mobility in treated and control counties would have moved in parallel. We can never check this for the post period, since that's the counterfactual. But we can check whether trends were parallel *before* treatment.
+
+```{r}
+#| message: false
+data %>%
+  mutate(group = ifelse(treatment == 1, "Targeted states", "Other states")) %>%
+  group_by(group, date) %>%
+  summarise(mobility = mean(aggregate_mobility, na.rm = TRUE)) %>%
+  ggplot(aes(x = date, y = mobility, colour = group)) +
+  geom_line(linewidth = 1) +
+  geom_point() +
+  geom_vline(xintercept = as.Date("2020-04-17"), linetype = "dashed") +
+  annotate("text", x = as.Date("2020-04-17"), y = Inf, label = "Tweets", vjust = 1.5, hjust = -0.1) +
+  labs(x = NULL, y = "Mean aggregate mobility", colour = NULL) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+::: {.callout-tip}
+## ✏️ Your turn
+
+Look at the pre-treatment period (before the dashed line). Do the trends look parallel? Note that the *levels* don't need to be the same. Only the *trends* need to match.
+:::
+
+
+# The 2×2 difference-in-differences
+
+## By hand
+
+The simplest DiD uses four averages:
+
+```{r}
+#| message: false
+means <- data %>%
+  group_by(treatment, post) %>%
+  summarise(mobility = mean(aggregate_mobility, na.rm = TRUE))
+
+means
+```
+
+```{r}
+treated_change <- means$mobility[means$treatment == 1 & means$post == 1] -
+                  means$mobility[means$treatment == 1 & means$post == 0]
+control_change <- means$mobility[means$treatment == 0 & means$post == 1] -
+                  means$mobility[means$treatment == 0 & means$post == 0]
+
+c(treated_change = treated_change, control_change = control_change,
+  did = treated_change - control_change)
+```
+
+The control group's change is our estimate of what *would have happened* to the treated group without the tweets. The DiD is the treated group's change **minus** that counterfactual change.
+
+## With regression
+
+The same estimate comes from a regression with an interaction:
+
+$$Y_{it} = \beta_0 + \beta_1 \text{treated}_i + \beta_2 \text{post}_t + \delta (\text{treated}_i \times \text{post}_t) + \varepsilon_{it}$$
+
+- $\beta_1$: the pre-period difference between treated and control counties
+- $\beta_2$: the change over time in control counties
+- $\delta$: the **difference in differences**, our estimate of the ATT
+
+```{r}
+did_simple <- feols(aggregate_mobility ~ treatment * post, data = data, vcov = ~ state_name)
+etable(did_simple)
+```
+
+The coefficient on `treatment x post` matches our hand calculation.
+
+## With two-way fixed effects
+
+In practice, DiD is usually estimated with **county fixed effects** ($\alpha_i$) and **day fixed effects** ($\lambda_t$):
+
+$$Y_{it} = \alpha_i + \lambda_t + \delta \, D_{it} + \varepsilon_{it}$$
+
+where $D_{it} = \text{treated}_i \times \text{post}_t$ (our `under_treatment` variable).
+
+- $\alpha_i$ absorbs everything fixed about a county (it replaces $\beta_1$)
+- $\lambda_t$ absorbs everything that affects all counties on a given day (it replaces $\beta_2$)
+
+In `fixest`, fixed effects go after the `|`. We **cluster standard errors by state**, because treatment is assigned at the state level and counties in the same state share shocks (more on this below).
+
+```{r}
+did_twfe <- feols(aggregate_mobility ~ under_treatment | county + date, data = data, vcov = ~ state_name)
+etable(did_simple, did_twfe)
+```
+
+## Inference: how many treated units do we really have?
+
+We have over 1,000 counties, but treatment was decided for only **three states**. Counties in the same state share the same governor, the same lockdown rules and the same news, so they aren't independent pieces of evidence. Compare the standard errors when we cluster by county vs. by state:
+
+```{r}
+etable(did_twfe, vcov = list(~ county, ~ state_name),
+       headers = c("Clustered by county", "Clustered by state"))
+```
+
+The estimate is the same, but the standard error is about four times larger once we account for the fact that treatment varies at the state level. **Cluster at the level at which treatment is assigned.**
+
+With only three treated clusters, even state-clustered standard errors are unreliable. A more transparent check borrows the logic of Lab 1: **randomization inference**. Pretend a random set of three *other* states had been targeted, re-estimate, and repeat many times. If the tweets had no effect, how unusual would our real estimate be?
+
+```{r}
+states <- unique(data$state_name)
+actual <- coef(did_twfe)[["under_treatment"]]
+
+set.seed(580)
+placebo <- map_dbl(1:500, function(s) {
+  fake_states <- sample(states, 3)
+  d <- data %>% mutate(fake_treatment = (state_name %in% fake_states) * post)
+  coef(feols(aggregate_mobility ~ fake_treatment | county + date, data = d))[["fake_treatment"]]
+})
+
+# share of placebo estimates at least as large (in absolute value) as the real one
+mean(abs(placebo) >= abs(actual))
+```
+
+```{r}
+ggplot(tibble(placebo), aes(x = placebo)) +
+  geom_histogram(bins = 40, fill = "grey60") +
+  geom_vline(xintercept = actual, colour = "red", linewidth = 1) +
+  labs(x = "Placebo DiD estimate (3 random states 'treated')", y = "Count",
+       title = "Our estimate (red) against 500 placebo assignments") +
+  theme_minimal()
+```
+
+
+# Interpretation
+
+The coefficient on `under_treatment` is the estimated **average treatment effect on the treated (ATT)**: the average change in mobility in targeted states after the tweets, relative to what we'd expect from the change in non-targeted states. This holds *if* the parallel trends assumption holds.
+
+The outcome is a sum of percentage changes from baseline, so the estimate is measured in percentage points of that sum. A positive estimate means mobility **rose** in targeted states relative to control states after the tweets, i.e. compliance with lockdown **fell**. The estimate is the *average* effect over the week after the tweets.
+
+::: {.callout-tip}
+## ✏️ Your turn
+
+1. Write one sentence interpreting the TWFE estimate for a non-technical audience.
+2. Is the estimate statistically distinguishable from zero once we cluster by state? What does the randomization inference suggest?
+3. Can you think of something *other than the tweets* that changed in Michigan, Minnesota and Virginia, but not in other states, around 17 April? If so, how would it bias the estimate? *(Hint: Michigan's "Operation Gridlock" protest was on 15 April, and all three states have Democratic governors.)*
+:::
+
+
+# Event study: dynamic effects
+
+A single DiD coefficient averages over the whole post period. An **event study** estimates a separate effect for each day relative to a reference day. This shows:
+
+- whether the effect grows, fades or stays constant over time, and
+- whether there are "effects" **before** treatment. These would suggest a violation of parallel trends.
+
+First, convert dates to integers:
+
+```{r}
+data <- data %>%
+  mutate(date_int = as.integer(as.factor(date)))
+
+data %>% distinct(date, date_int)
+```
+
+The tweets were on 17 April (`date_int = 8`). We use the **last pre-treatment day**, 16 April (`date_int = 7`), as the reference period, so every coefficient is relative to the day before the tweets.
+
+```{r}
+event_study <- feols(aggregate_mobility ~ i(date_int, treatment, ref = 7) | county + date_int,
+                     data = data, vcov = ~ state_name)
+
+etable(event_study)
+```
+
+```{r}
+iplot(event_study,
+      xlab = "Day (8 = 17 April, day of the tweets)",
+      main = "Effect of 'LIBERATE' tweets on aggregate mobility")
+```
+
+::: {.callout-tip}
+## ✏️ Your turn
+
+1. Are the pre-treatment coefficients (days 1–6) close to zero? What does that suggest about parallel trends? *Hint: 11–12 and 18–19 April 2020 were weekends, and 10–12 April was Easter weekend (in the pre-period only). Did weekends and Easter look the same in treated and control states?*
+2. Restrict the sample to Republican-voting counties, as in the paper. Re-run the TWFE model and the event study. Does the estimate change?
+
+```r
+data_rep <- data %>% filter(winning_party == "REPUBLICAN")
+```
+
+3. **Placebo test:** use only the pre-period (`post == 0`) and pretend the treatment happened on 14 April. Do you find an "effect"? What *should* you find?
+:::
+
+::: {.callout-important}
+## So what do we conclude?
+
+In these data, several pre-treatment coefficients are large, the placebo test finds an "effect", and the estimate is not distinguishable from zero once we cluster by state. The evidence for parallel trends is weak, so treat the pooled estimate as **illustrative, not credible**. That is a perfectly good lesson: a DiD is only as good as its comparison group. The published analysis uses a more carefully chosen comparison group and different methods (see below).
+:::
+
+
+# How can we improve the analysis?
+
+- **Better comparison group:** In the paper, control states were those under similar lockdown restrictions that were *not* targeted. A comparison group that is more similar before treatment makes parallel trends more plausible.
+- **Placebo and robustness tests:** fake treatment dates, alternative outcomes, dropping one treated state at a time.
+- **Alternative estimators:** synthetic control and matrix completion methods construct the counterfactual more flexibly (see the extension below).
+- **Staggered timing:** when units are treated at different times, standard TWFE can be biased. Newer estimators (Callaway & Sant'Anna 2021; Sun & Abraham 2021) fix this. `fixest` implements Sun & Abraham via `sunab()`.
+
+
+# Extension: Matrix completion
+
+In Dickson & Hobolt (2024), we use matrix completion methods to estimate the counterfactual from the control states' data, then compare it with what actually happened in the treated states. This is beyond the scope of the lab, and it takes a while to run, so the chunk below is not evaluated by default.
+
+```{r}
+#| eval: false
+if (!("fect" %in% installed.packages())) install.packages("fect")
+library(fect)
+
+estimate <- function(data, formula) {
+  fect(data = data,
+       formula = formula,
+       method = "mc",
+       seed = 42,
+       index = c("county", "date_int"),
+       r = c(0, 5),
+       k = 10,
+       CV = TRUE,
+       force = "two-way",
+       nlambda = 15,
+       se = TRUE,
+       parallel = TRUE,
+       cores = 4, # adjust to the number of cores on your machine
+       nboots = 200)
+}
+
+full_state_aggregate <- estimate(data, aggregate_mobility ~ under_treatment)
+
+print(full_state_aggregate)
+plot(full_state_aggregate)
+```

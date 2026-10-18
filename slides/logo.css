@@ -1,0 +1,13 @@
+/* LSE logo, drawn inside each slide so it scales with the slide (Quarto's
+   `logo:` option is position: fixed in screen pixels, so on any window that
+   isn't exactly 1600x900 it drifts over the headings). Hidden on dark slides. */
+.reveal .slides > section:not(.section-slide):not(.closing)::after {
+  content: "";
+  position: absolute;
+  top: 30px;
+  right: 96px;
+  width: 150px;
+  height: 44px;
+  background: url("figures/LSE_logo_tight.svg") no-repeat right top / contain;
+  pointer-events: none;
+}

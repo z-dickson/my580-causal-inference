@@ -1,0 +1,325 @@
+---
+title: "MY580 Lab 1: Playing God with Potential Outcomes"
+author: "Zach Dickson"
+format:
+  html:
+    code-fold: false
+    number-sections: true
+    toc: true
+    embed-resources: true
+---
+
+
+# Overview
+
+In real research we never see both potential outcomes for the same person. That is the **fundamental problem of causal inference**. In this lab we cheat: we *simulate* a world where we know both $Y_i(0)$ and $Y_i(1)$ for everyone. Because we know the true answer, we can see exactly when a simple comparison gets it right and when it gets it wrong.
+
+**Research question:** Does taking part in a civic education programme increase political participation?
+
+- **Treatment** ($D_i$): taking part in the programme (1 = yes, 0 = no)
+- **Outcome** ($Y_i$): a political participation score (0–100)
+- **Covariate:** prior political interest, measured *before* treatment
+
+We will:
+
+1. Simulate both potential outcomes for everyone and compute the true ATE
+2. Hide one potential outcome per person (the fundamental problem)
+3. Let people **self-select** into treatment and see the naive estimate go wrong
+4. **Randomize** treatment and repeat the experiment 1,000 times
+5. Check balance and use a covariate to improve precision
+6. *(Extension)* Add noncompliance
+
+Look for the **✏️ Your turn** prompts.
+
+
+# Setup
+
+```{r}
+#| message: false
+# install packages if they are not already installed
+packages_to_install <- c("tidyverse")
+
+for (package_name in packages_to_install) {
+  if (!(package_name %in% installed.packages())) {
+    install.packages(package_name)
+  }
+}
+
+library(tidyverse)
+
+# set the seed so everyone gets the same random numbers
+set.seed(580)
+```
+
+
+# Step 1: Simulate a world where we can see everything
+
+We create 1,000 people. Each person has a level of political interest, a participation score *without* the programme, $Y_i(0)$, and a participation score *with* the programme, $Y_i(1)$.
+
+Two features of this world matter later:
+
+- People with more political interest participate more **regardless of treatment**: interest raises $Y_i(0)$.
+- The programme raises participation by about **5 points** on average, but the effect differs from person to person.
+
+```{r}
+n <- 1000
+
+population <- tibble(
+  id       = 1:n,
+  interest = rnorm(n, mean = 0, sd = 1),                  # prior political interest (standardised)
+  y0       = 50 + 8 * interest + rnorm(n, mean = 0, sd = 5), # outcome WITHOUT the programme
+  tau      = rnorm(n, mean = 5, sd = 2),                  # individual treatment effect
+  y1       = y0 + tau                                     # outcome WITH the programme
+)
+
+head(population)
+```
+
+Because we can see both potential outcomes, we can compute the **true** average treatment effect directly:
+
+$$ATE = E[Y_i(1) - Y_i(0)]$$
+
+```{r}
+true_ate <- mean(population$y1 - population$y0)
+true_ate
+```
+
+This is the number we are trying to recover. Keep it in mind.
+
+
+# Step 2: The fundamental problem
+
+In the real world, each person either takes the programme or doesn't. We only see the potential outcome that matches what they actually did:
+
+$$Y_i = D_i \cdot Y_i(1) + (1 - D_i) \cdot Y_i(0)$$
+
+Let's suppose people **choose** whether to take part, and that more interested people are more likely to sign up.
+
+```{r}
+population <- population %>%
+  mutate(
+    p_signup  = plogis(1.5 * interest),         # probability of signing up rises with interest
+    d_self    = rbinom(n, size = 1, prob = p_signup),
+    y_obs     = ifelse(d_self == 1, y1, y0)     # the outcome we actually observe
+  )
+
+# What a researcher would actually see: the other potential outcome is missing
+population %>%
+  mutate(y1_seen = ifelse(d_self == 1, y1, NA),
+         y0_seen = ifelse(d_self == 0, y0, NA)) %>%
+  select(id, interest, d_self, y0_seen, y1_seen) %>%
+  head(10)
+```
+
+Half the potential outcomes are now missing (`NA`). Causal inference is a **missing data problem**.
+
+
+# Step 3: Self-selection and the naive comparison
+
+A natural first step is to compare the average outcome of people who took the programme with those who didn't:
+
+```{r}
+naive <- mean(population$y_obs[population$d_self == 1]) -
+         mean(population$y_obs[population$d_self == 0])
+
+c(naive_estimate = naive, true_ate = true_ate)
+```
+
+The naive estimate is far too large. Why? Because we still have the "god's-eye" data, we can split it into two pieces:
+
+$$\underbrace{E[Y_i \mid D_i{=}1] - E[Y_i \mid D_i{=}0]}_{\text{naive difference}} = \underbrace{E[Y_i(1) - Y_i(0) \mid D_i{=}1]}_{\text{ATT}} + \underbrace{E[Y_i(0) \mid D_i{=}1] - E[Y_i(0) \mid D_i{=}0]}_{\text{selection bias}}$$
+
+```{r}
+treated <- population %>% filter(d_self == 1)
+control <- population %>% filter(d_self == 0)
+
+att            <- mean(treated$y1 - treated$y0)
+selection_bias <- mean(treated$y0) - mean(control$y0)
+
+c(naive = naive, att = att, selection_bias = selection_bias, att_plus_bias = att + selection_bias)
+```
+
+The decomposition holds exactly. Most of the naive difference is **selection bias**: the people who signed up would have participated more *even without the programme*, because they were more interested to begin with.
+
+```{r}
+population %>%
+  mutate(group = ifelse(d_self == 1, "Signed up", "Did not sign up")) %>%
+  ggplot(aes(x = interest, fill = group)) +
+  geom_density(alpha = 0.5) +
+  labs(title = "Under self-selection, the groups differ before treatment",
+       x = "Prior political interest", y = "Density", fill = NULL) +
+  theme_minimal()
+```
+
+::: {.callout-tip}
+## ✏️ Your turn
+
+1. In the `p_signup` line, change `1.5` to `0` so that interest no longer affects sign-up. Re-run Steps 2–3. What happens to the selection bias?
+2. Change it to `-1.5`, so that *less* interested people sign up. What sign does the bias have now?
+
+(Set it back to `1.5` before moving on.)
+:::
+
+
+# Step 4: Randomize!
+
+Now suppose that *we* decide who gets the programme by flipping a coin. Randomization makes treatment independent of the potential outcomes:
+
+$$\big(Y_i(1), Y_i(0)\big) \perp D_i$$
+
+so the selection bias term is zero **in expectation**.
+
+```{r}
+population <- population %>%
+  mutate(
+    d_rand     = sample(rep(c(0, 1), length.out = n)),  # assign exactly half to treatment
+    y_obs_rand = ifelse(d_rand == 1, y1, y0)
+  )
+
+experiment <- mean(population$y_obs_rand[population$d_rand == 1]) -
+              mean(population$y_obs_rand[population$d_rand == 0])
+
+c(experimental_estimate = experiment, true_ate = true_ate)
+```
+
+Much closer! But any one experiment is still a bit off, because of chance. The key property of randomization is that it is right **on average**. Let's run the experiment 1,000 times, re-randomizing each time, and also repeat the self-selection study 1,000 times for comparison.
+
+```{r}
+run_once <- function(pop) {
+  # randomized experiment
+  d_rand <- sample(rep(c(0, 1), length.out = nrow(pop)))
+  y_rand <- ifelse(d_rand == 1, pop$y1, pop$y0)
+
+  # observational study with self-selection
+  d_self <- rbinom(nrow(pop), 1, plogis(1.5 * pop$interest))
+  y_self <- ifelse(d_self == 1, pop$y1, pop$y0)
+
+  tibble(
+    Randomized       = mean(y_rand[d_rand == 1]) - mean(y_rand[d_rand == 0]),
+    `Self-selection` = mean(y_self[d_self == 1]) - mean(y_self[d_self == 0])
+  )
+}
+
+sims <- map_dfr(1:1000, ~ run_once(population))
+
+sims %>% summarise(across(everything(), mean))
+```
+
+```{r}
+sims %>%
+  pivot_longer(everything(), names_to = "design", values_to = "estimate") %>%
+  ggplot(aes(x = estimate, fill = design)) +
+  geom_histogram(bins = 60, alpha = 0.7, position = "identity") +
+  geom_vline(xintercept = true_ate, linetype = "dashed") +
+  annotate("text", x = true_ate, y = Inf, label = "True ATE", vjust = 2, hjust = -0.1) +
+  labs(title = "1,000 studies under each design",
+       x = "Estimated effect", y = "Count", fill = NULL) +
+  theme_minimal()
+```
+
+The randomized estimates are centred on the truth (**unbiased**). The self-selection estimates are centred somewhere else entirely, and running the study more times does not help.
+
+::: {.callout-tip}
+## ✏️ Your turn
+
+1. Change `n` in Step 1 from `1000` to `100` and re-run everything. What happens to the spread of the randomized estimates? Are they still centred on the truth?
+2. What does this tell you about the difference between **bias** and **precision**?
+:::
+
+
+# Step 5: Balance and covariates
+
+Randomization balances treatment and control groups on **all** pre-treatment characteristics: the ones we measure (like interest) and the ones we don't. We can check the ones we measure:
+
+```{r}
+population %>%
+  group_by(d_rand) %>%
+  summarise(mean_interest = mean(interest), n = n())
+```
+
+```{r}
+population %>%
+  mutate(group = ifelse(d_rand == 1, "Treatment", "Control")) %>%
+  ggplot(aes(x = interest, fill = group)) +
+  geom_density(alpha = 0.5) +
+  labs(title = "Under randomization, the groups look the same before treatment",
+       x = "Prior political interest", y = "Density", fill = NULL) +
+  theme_minimal()
+```
+
+In practice we estimate the effect with a regression. With a binary treatment, the coefficient on treatment is just the difference in means:
+
+```{r}
+model_simple <- lm(y_obs_rand ~ d_rand, data = population)
+summary(model_simple)$coefficients
+```
+
+Adding a pre-treatment covariate is **not** needed for identification, since randomization already handles that. But it can make the estimate more **precise**, because it soaks up variation in the outcome:
+
+```{r}
+model_cov <- lm(y_obs_rand ~ d_rand + interest, data = population)
+
+tibble(
+  model    = c("Difference in means", "With covariate"),
+  estimate = c(coef(model_simple)["d_rand"], coef(model_cov)["d_rand"]),
+  std_error = c(summary(model_simple)$coefficients["d_rand", "Std. Error"],
+                summary(model_cov)$coefficients["d_rand", "Std. Error"])
+)
+```
+
+Both estimates are close to the true ATE, but the standard error is much smaller with the covariate.
+
+::: {.callout-warning}
+## Only adjust for *pre-treatment* variables
+
+Controlling for something affected by the treatment (a "post-treatment" variable) can reintroduce bias, even in an experiment. We'll see why when we cover DAGs after lunch.
+:::
+
+
+# Extension: Noncompliance
+
+In many experiments we can **assign** treatment but can't force people to take it. Suppose we randomly *invite* half the population ($Z_i$), but only some invitees actually attend ($D_i$). Here, less interested people are less likely to show up.
+
+```{r}
+population <- population %>%
+  mutate(
+    z        = sample(rep(c(0, 1), length.out = n)),        # random invitation
+    complier = rbinom(n, 1, plogis(0.5 + 1.5 * interest)),  # would attend if invited
+    d_nc     = z * complier,                                # actually attended
+    y_nc     = ifelse(d_nc == 1, y1, y0)
+  )
+
+# share of invitees who attended
+mean(population$d_nc[population$z == 1])
+```
+
+Three estimates:
+
+- **As-treated:** compare people who attended with people who didn't. This throws away randomization.
+- **Intention-to-treat (ITT):** compare by *invitation*. This is unbiased for the effect of the invitation.
+- **Complier average causal effect (CACE):** ITT divided by the share who complied. This is the effect of *attending*, among the people who attend when invited.
+
+```{r}
+as_treated <- mean(population$y_nc[population$d_nc == 1]) - mean(population$y_nc[population$d_nc == 0])
+itt        <- mean(population$y_nc[population$z == 1])    - mean(population$y_nc[population$z == 0])
+first_stage <- mean(population$d_nc[population$z == 1])  - mean(population$d_nc[population$z == 0])
+cace       <- itt / first_stage
+
+true_cace  <- with(population, mean(tau[complier == 1]))
+
+tibble(
+  estimate = c("As-treated", "ITT", "CACE (ITT / compliance)", "True effect among compliers"),
+  value    = c(as_treated, itt, cace, true_cace)
+)
+```
+
+The as-treated comparison is biased, because attendance is self-selected again. The ITT is smaller than the effect of attending, because many invitees never attended. Dividing by the compliance rate recovers, up to sampling error, the effect among compliers. This is exactly the logic of **instrumental variables**, which we'll meet this afternoon: the random invitation is the instrument.
+
+
+# Key takeaways
+
+- With "god's-eye" data, the causal effect is easy to compute. In real data, half the potential outcomes are always missing.
+- A naive comparison mixes up the treatment effect with **selection bias**: groups that differ before treatment.
+- **Randomization** removes selection bias on average, for observed *and* unobserved characteristics.
+- Any single experiment has sampling error. Larger samples and pre-treatment covariates improve **precision**, not identification.
+- With noncompliance, compare by **assignment** (ITT), and scale by compliance to get the CACE.
