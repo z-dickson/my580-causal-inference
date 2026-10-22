@@ -302,7 +302,9 @@ ggplot(po, aes(y = lab)) +
 - Each unit is either treated **or** not, never both.
 - So we only ever observe **one** potential outcome per unit:
 
+::: {.fragment}
 $$Y_i = D_i \cdot Y_i(1) + (1 - D_i) \cdot Y_i(0)$$
+:::
 
 - The other potential outcome is the **counterfactual**, and it is **missing**.
 - Causal inference is a **missing data problem**.
@@ -463,11 +465,15 @@ Why randomization works
 ::: {.incremental}
 - If treatment is assigned **at random**, it can't be related to anything about the units, including their potential outcomes:
 
+::: {.fragment}
 $$\big(Y_i(1), Y_i(0)\big) \perp D_i$$
+:::
 
 - So, **on average**, the treatment and control groups are the same before treatment:
 
+::: {.fragment}
 $$E[Y_i(0) \mid D_i{=}1] = E[Y_i(0) \mid D_i{=}0] \quad \Rightarrow \quad \text{selection bias} = 0$$
+:::
 
 - And the simple difference in means estimates the **ATE**.
 :::
@@ -628,7 +634,9 @@ Suppose we **randomly invite** people to the programme ($Z_i$), but only some at
   - Unbiased for the effect of the *invitation*
 - **Complier average causal effect (CACE):**
 
+::: {.fragment}
 $$CACE = \frac{ITT}{\text{share who comply}}$$
+:::
 
 - The effect of *attending*, among those who attend when invited (assuming the invitation affects outcomes **only through** attendance)
 - This is **instrumental variables** in disguise. More after lunch!
