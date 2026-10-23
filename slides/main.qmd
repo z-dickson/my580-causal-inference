@@ -770,6 +770,97 @@ make_dag("dag { X -> Y  X -> Z  Y -> Z }", "c) Collider",   "Z is a common effec
 ```
 
 
+# Example: a confounder
+
+:::: {.columns .middle}
+::: {.column width="58%"}
+::: {.incremental}
+- Does campaign **spending** increase a candidate's **vote share**?
+- Strong candidates (experienced, well known, scandal-free) **raise more money** *and* **win more votes**
+- **Candidate quality** is a common cause: it opens the back door Spending ← Quality → Vote share
+- Comparing big and small spenders mixes up the effect of money with the effect of quality, so the naive estimate is **too large**
+- **Adjust for it:** measure quality (e.g. prior office held, previous vote share) and control for it
+:::
+:::
+::: {.column width="42%"}
+```{r}
+#| label: confounder-example-dag
+#| fig-width: 6
+#| fig-height: 4.4
+#| fig-alt: "DAG: Candidate quality causes both Spending and Vote share; Spending causes Vote share"
+d <- dagitty('dag { Quality -> Spending -> "Vote share"  Quality -> "Vote share" }')
+coordinates(d) <- list(x = c(Spending = 0, Quality = 1, "Vote share" = 2),
+                       y = c(Spending = 0, Quality = 1, "Vote share" = 0))
+dag_plot(d, list(treatment = "Spending", outcome = "Vote share"), size = 7.5) +
+  annotate("text", x = 1, y = 0.5, label = "back door", colour = muted, size = 5.4,
+           fontface = "italic")
+```
+:::
+::::
+
+
+# Example: a mediator
+
+:::: {.columns .middle}
+::: {.column width="58%"}
+::: {.incremental}
+- Does a **social pressure mailer** increase **turnout**? (the Gerber, Green & Larimer experiment from Part 2)
+- The mailer works partly by raising people's **intention to vote**
+- **Intention** is a mediator: Mailer → Intention → Turnout is *part of* the effect we want
+- If we control for intention, we compare people with the same intention and **remove the part of the effect that runs through it**: the estimate shrinks towards zero
+- **Don't adjust for it:** controlling for things the treatment affects causes *post-treatment bias*, even in an experiment
+:::
+:::
+::: {.column width="42%"}
+```{r}
+#| label: mediator-example-dag
+#| fig-width: 6
+#| fig-height: 4.4
+#| fig-alt: "DAG: Mailer causes Intention, which causes Turnout; Mailer also causes Turnout directly"
+d <- dagitty('dag { Mailer -> Intention -> Turnout  Mailer -> Turnout }')
+coordinates(d) <- list(x = c(Mailer = 0, Intention = 1, Turnout = 2),
+                       y = c(Mailer = 0, Intention = 1, Turnout = 0))
+dag_plot(d, list(treatment = "Mailer", outcome = "Turnout"), size = 7.5) +
+  annotate("text", x = 1, y = 0.5, label = "indirect effect", colour = muted, size = 5.4,
+           fontface = "italic") +
+  annotate("text", x = 1, y = -0.17, label = "direct effect", colour = muted, size = 5.4,
+           fontface = "italic")
+```
+:::
+::::
+
+
+# Example: a collider
+
+:::: {.columns .middle}
+::: {.column width="58%"}
+::: {.incremental}
+- Does **education** increase **political interest**? We test it with a survey
+- But only some people **respond**: the educated *and* the politically interested are both more likely to answer
+- **Responding** is a collider: Education → Responds ← Interest
+- Analysing respondents only **conditions on the collider**: the less-educated people who answer are disproportionately the very interested ones
+- This creates a **spurious negative** association, so we **underestimate** the effect
+- **Don't condition on it:** and watch for colliders hidden in **how the sample was selected**
+:::
+:::
+::: {.column width="42%"}
+```{r}
+#| label: collider-example-dag
+#| fig-width: 6
+#| fig-height: 4.4
+#| fig-alt: "DAG: Education and Interest both cause survey response; only respondents are observed"
+d <- dagitty('dag { Education -> Interest  Education -> Responds  Interest -> Responds }')
+coordinates(d) <- list(x = c(Education = 0, Responds = 1, Interest = 2),
+                       y = c(Education = 0, Responds = 1, Interest = 0))
+dag_plot(d, list(treatment = "Education", outcome = "Interest", conditioned = "Responds"),
+         size = 7.5) +
+  annotate("text", x = 1, y = 0.5, label = "conditioned on", colour = muted, size = 5.4,
+           fontface = "italic")
+```
+:::
+::::
+
+
 # Paths and back doors
 
 ::: {.incremental}
