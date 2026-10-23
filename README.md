@@ -37,7 +37,7 @@ By the end of the workshop, participants will be able to:
 Open the `.qmd` files in RStudio to run the code, or view the rendered `.html` versions.
 
 - **Lab 1: Playing God with potential outcomes** ([`code/lab1_experiments.qmd`](code/lab1_experiments.qmd)). Simulate data where both potential outcomes are known, show how self-selection biases naive estimates, and show how randomization recovers the true effect. Extension: noncompliance, ITT and CACE.
-- **Lab 2: Difference-in-differences** ([`code/lab2_did.qmd`](code/lab2_did.qmd)). Did President Trump's April 2020 "LIBERATE" tweets reduce compliance with COVID-19 lockdowns? Uses Google county mobility data to draw the DAG, check pre-trends, estimate a 2×2 DiD (by hand, with regression and with two-way fixed effects) and run an event study with `fixest`.
+- **Lab 2: Difference-in-differences** ([`code/lab2_did.qmd`](code/lab2_did.qmd)). Did New Jersey's 1992 minimum wage increase reduce employment? Uses Card & Krueger's (1994) survey of fast-food restaurants in New Jersey and Pennsylvania to draw the DAG, check that wages rose, estimate a 2×2 DiD (by hand, with regression and with two-way fixed effects) with `fixest`, and compare high- and low-wage restaurants within New Jersey. A simulation shows what an event study adds when there are more time periods.
 
 ## Repository contents
 
@@ -56,7 +56,7 @@ Open the `.qmd` files in RStudio to run the code, or view the rendered `.html` v
 │   ├── lab2_did.qmd         # Lab 2: difference-in-differences
 │   └── lab2_did.html
 └── data/
-    └── google_mobility_data.csv   # County-level mobility data used in Lab 2
+    └── card_krueger_minwage.csv   # Card & Krueger (1994) restaurant survey used in Lab 2
 ```
 
 ## Setup

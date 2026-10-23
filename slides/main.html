@@ -2405,7 +2405,7 @@ display:block!important;
 <li class="fragment"><strong>Threats?</strong> Michigan’s “Operation Gridlock” protest (15 April)? Trump’s reopening guidelines (16 April)? Easter weekend in the pre-period? Spillovers to neighbouring states?</li>
 </ul>
 </div>
-<p>We’ll estimate this in <strong>Lab 2</strong>.</p>
+<p>In <strong>Lab 2</strong> we’ll apply DiD to a classic case: New Jersey’s 1992 minimum wage increase.</p>
 </section>
 
 <section id="regression-discontinuity-rd" class="title-slide slide level1 center">
@@ -2579,16 +2579,18 @@ display:block!important;
 <h1><span class="pre">Lab 2:</span> Difference-in-Differences</h1>
 <div class="tracker"><span><span class="n">01</span>Foundations</span><span><span class="n">02</span>Experiments</span><span class="on"><span class="n">03</span>Observational studies</span><span><span class="n">04</span>Advanced topics</span></div>
 <p>Open <code>code/lab2_did.qmd</code> from the <a href="https://github.com/z-dickson/my580-causal-inference">GitHub repository</a> in RStudio.</p>
+<p><strong>Did New Jersey’s 1992 minimum wage increase ($4.25 → $5.05) reduce employment?</strong> <span class="citation" data-cites="card1994minimum">(<a href="#/references" role="doc-biblioref" onclick>Card and Krueger 1994</a>)</span></p>
 <div>
 <ol start="0" type="1">
 <li class="fragment"><em>Warm-up:</em> DAG the design with <code>dagitty</code></li>
-<li class="fragment">Build the <strong>treatment</strong> and <strong>post</strong> indicators</li>
-<li class="fragment">Plot <strong>pre-treatment trends</strong></li>
+<li class="fragment">Build the <strong>treatment</strong> (New Jersey) and <strong>post</strong> indicators</li>
+<li class="fragment">Check that the treatment happened: did <strong>wages</strong> rise?</li>
 <li class="fragment">Estimate the <strong>2×2 DiD</strong>: by hand, with regression, and with <strong>two-way fixed effects</strong></li>
-<li class="fragment">Estimate an <strong>event study</strong></li>
+<li class="fragment">Use <strong>high-wage New Jersey restaurants</strong> as a second control group</li>
+<li class="fragment"><em>Simulation:</em> what an <strong>event study</strong> adds when we have more periods</li>
 </ol>
 </div>
-<p>Data: <a href="https://www.google.com/covid19/mobility/">Google COVID-19 Community Mobility Reports</a>, county level, 10–23 April 2020. We’ll regroup at 14:15.</p>
+<p>Data: <a href="https://davidcard.berkeley.edu/data_sets.html">Card &amp; Krueger’s survey</a> of 410 fast-food restaurants in New Jersey and Pennsylvania, February and November 1992. We’ll regroup at 14:15.</p>
 </section>
 
 <section id="the-did-regression" class="title-slide slide level1 center">
@@ -2597,15 +2599,15 @@ display:block!important;
 <p><span class="math display">\[Y_{it} = \alpha_i + \lambda_t + \delta \, D_{it} + \varepsilon_{it}\]</span></p>
 <div>
 <ul>
-<li class="fragment"><span class="math inline">\(Y_{it}\)</span>: mobility in county <span class="math inline">\(i\)</span> on day <span class="math inline">\(t\)</span></li>
-<li class="fragment"><span class="math inline">\(\alpha_i\)</span>: <strong>county fixed effects</strong>, absorbing everything fixed about a county</li>
-<li class="fragment"><span class="math inline">\(\lambda_t\)</span>: <strong>day fixed effects</strong>, absorbing everything that affects all counties on a given day</li>
-<li class="fragment"><span class="math inline">\(D_{it} = \text{treated}_i \times \text{post}_t\)</span>: 1 for targeted counties after 17 April</li>
+<li class="fragment"><span class="math inline">\(Y_{it}\)</span>: FTE employment in restaurant <span class="math inline">\(i\)</span> in survey wave <span class="math inline">\(t\)</span></li>
+<li class="fragment"><span class="math inline">\(\alpha_i\)</span>: <strong>restaurant fixed effects</strong>, absorbing everything fixed about a restaurant</li>
+<li class="fragment"><span class="math inline">\(\lambda_t\)</span>: <strong>wave fixed effects</strong>, absorbing everything that affects all restaurants in a given wave</li>
+<li class="fragment"><span class="math inline">\(D_{it} = \text{NJ}_i \times \text{post}_t\)</span>: 1 for New Jersey restaurants after the increase</li>
 <li class="fragment"><span class="math inline">\(\delta\)</span>: the DiD estimate of the <strong>ATT</strong></li>
 </ul>
 </div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(aggregate_mobility <span class="sc">~</span> under_treatment <span class="sc">|</span> county <span class="sc">+</span> date, <span class="at">data =</span> data, <span class="at">vcov =</span> <span class="sc">~</span> state_name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Cluster standard errors at the level treatment is assigned: here, the <strong>state</strong>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href aria-hidden="true" tabindex="-1"></a><span class="fu">feols</span>(fte <span class="sc">~</span> under_treatment <span class="sc">|</span> store_id <span class="sc">+</span> wave, <span class="at">data =</span> data, <span class="at">vcov =</span> <span class="sc">~</span> store_id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Treatment is assigned at the <strong>state</strong> level, but with one treated and one control state we can’t cluster by state. That’s why the comparison <strong>within</strong> New Jersey matters.</p>
 </section>
 
 <section id="summary-observational-studies" class="title-slide slide level1 summary center">
@@ -2802,6 +2804,9 @@ Callaway, Brantly, and Pedro H. C. Sant’Anna. 2021. <span>“Difference-in-Dif
 </div>
 <div id="ref-card1993using" class="csl-entry" role="listitem">
 Card, David. 1993. <span>“Using Geographic Variation in College Proximity to Estimate the Return to Schooling.”</span> NBER Working Paper 4483. National Bureau of Economic Research.
+</div>
+<div id="ref-card1994minimum" class="csl-entry" role="listitem">
+Card, David, and Alan B. Krueger. 1994. <span>“Minimum Wages and Employment: A Case Study of the Fast-Food Industry in New Jersey and Pennsylvania.”</span> <em>American Economic Review</em> 84 (4): 772–93.
 </div>
 <div id="ref-chernozhukov2018double" class="csl-entry" role="listitem">
 Chernozhukov, Victor, Denis Chetverikov, Mert Demirer, Esther Duflo, Christian Hansen, Whitney Newey, and James Robins. 2018. <span>“Double/Debiased Machine Learning for Treatment and Structural Parameters.”</span> <em>The Econometrics Journal</em> 21 (1): C1–68.

@@ -1,0 +1,821 @@
+store_id,state,region,chain,co_owned,wave,status,emp_ft,emp_pt,managers,starting_wage,hours_open,price_meal
+1,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,1,open,30,15,3,,16.5,2.58
+1,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,2,open,3.5,35,3,4.3,16.5,
+2,Pennsylvania,PA: Philadelphia suburbs,KFC,0,1,open,6.5,6.5,4,,13,4.26
+2,Pennsylvania,PA: Philadelphia suburbs,KFC,0,2,open,0,15,4,4.45,13,4.25
+3,Pennsylvania,PA: Philadelphia suburbs,KFC,1,1,open,3,7,2,,10,4.02
+3,Pennsylvania,PA: Philadelphia suburbs,KFC,1,2,open,3,7,4,5,11,4.02
+4,Pennsylvania,PA: Philadelphia suburbs,Wendy's,1,1,open,20,20,4,5,12,3.48
+4,Pennsylvania,PA: Philadelphia suburbs,Wendy's,1,2,open,0,36,2,5.25,12,2.58
+5,Pennsylvania,PA: Philadelphia suburbs,Wendy's,1,1,open,6,26,5,5.5,12,3.29
+5,Pennsylvania,PA: Philadelphia suburbs,Wendy's,1,2,open,28,3,6,4.75,12,2.8
+6,Pennsylvania,PA: Philadelphia suburbs,Wendy's,1,1,open,0,31,5,5,12,2.59
+6,Pennsylvania,PA: Philadelphia suburbs,Wendy's,1,2,open,,,,,12,
+7,Pennsylvania,PA: Easton area,Burger King,0,1,open,50,35,3,5,18,2.86
+7,Pennsylvania,PA: Easton area,Burger King,0,2,open,15,18,5,4.75,18,2.84
+8,Pennsylvania,PA: Easton area,Burger King,0,1,open,10,17,5,5,24,2.85
+8,Pennsylvania,PA: Easton area,Burger King,0,2,open,26,9,6,5,24,2.89
+9,Pennsylvania,PA: Easton area,KFC,1,1,open,2,8,5,5.25,10,3.78
+9,Pennsylvania,PA: Easton area,KFC,1,2,open,3,12,2,5,11,4.1
+10,Pennsylvania,PA: Philadelphia suburbs,KFC,1,1,open,2,10,2,5,10,3.9899999999999998
+10,Pennsylvania,PA: Philadelphia suburbs,KFC,1,2,open,2,9,2,5,10.5,3.9499999999999997
+11,Pennsylvania,PA: Easton area,Roy Rogers,1,1,open,2.5,20,3,5,12.5,3.17
+11,Pennsylvania,PA: Easton area,Roy Rogers,1,2,open,1,25,4,4.75,12,2.91
+12,Pennsylvania,PA: Easton area,Burger King,0,1,open,40,30,3,5,18,2.84
+12,Pennsylvania,PA: Easton area,Burger King,0,2,open,9,32,4,5,18,2.67
+13,Pennsylvania,PA: Easton area,Burger King,0,1,open,8,27,5,5,18,2.6
+13,Pennsylvania,PA: Easton area,Burger King,0,2,open,7,39,4,4.5,18,2.6
+14,Pennsylvania,PA: Easton area,Burger King,0,1,open,10.5,30,3,5.5,18,2.75
+14,Pennsylvania,PA: Easton area,Burger King,0,2,open,18,10,3,4.75,18,2.81
+15,Pennsylvania,PA: Easton area,Burger King,0,1,open,6,9,3,5,12.5,3.12
+15,Pennsylvania,PA: Easton area,Burger King,0,2,open,5,20,3,4.5,13,2.97
+16,Pennsylvania,PA: Easton area,KFC,1,1,open,5,17.5,3,5.25,10,4.22
+16,Pennsylvania,PA: Easton area,KFC,1,2,open,15,4,3,5,11,4
+17,Pennsylvania,PA: Easton area,KFC,1,1,open,1,15,1,5,10,3.9899999999999998
+17,Pennsylvania,PA: Easton area,KFC,1,2,open,4,13,3,4.75,11,4.02
+18,Pennsylvania,PA: Easton area,Roy Rogers,1,1,open,10,6,2,5,11.5,2.9699999999999998
+18,Pennsylvania,PA: Easton area,Roy Rogers,1,2,open,6,20,3,4.75,11,3
+19,Pennsylvania,PA: Easton area,Roy Rogers,0,1,open,20,13,3,5,16,2.85
+19,Pennsylvania,PA: Easton area,Roy Rogers,0,2,open,5,15,3,4.75,15,2.96
+20,Pennsylvania,PA: Easton area,Roy Rogers,0,1,open,5,23,2,5,14,3
+20,Pennsylvania,PA: Easton area,Roy Rogers,0,2,open,2,19,3,4.25,11.5,3.0700000000000003
+21,Pennsylvania,PA: Easton area,Roy Rogers,1,1,open,10,12.5,4,5,16,3.1100000000000003
+21,Pennsylvania,PA: Easton area,Roy Rogers,1,2,open,2,18,3,5,16,3.0700000000000003
+22,Pennsylvania,PA: Philadelphia suburbs,Roy Rogers,1,1,open,27,12,3,5,16,3.96
+22,Pennsylvania,PA: Philadelphia suburbs,Roy Rogers,1,2,open,0,30,4,4.9,16,2.87
+23,Pennsylvania,PA: Easton area,Roy Rogers,0,1,open,4,28,3,5,15,3
+23,Pennsylvania,PA: Easton area,Roy Rogers,0,2,open,8,20,3,5,16,2.98
+24,Pennsylvania,PA: Easton area,Roy Rogers,1,1,open,10,15,3,5,16,2.68
+24,Pennsylvania,PA: Easton area,Roy Rogers,1,2,open,10,10,3,4.75,16,2.91
+25,Pennsylvania,PA: Easton area,Wendy's,1,1,open,0,28,5,5,12,3.34
+25,Pennsylvania,PA: Easton area,Wendy's,1,2,open,0,31,5,5,12,2.53
+26,Pennsylvania,PA: Easton area,Roy Rogers,1,1,open,3,16,3,5,16,3.16
+26,Pennsylvania,PA: Easton area,Roy Rogers,1,2,open,5.5,10,3,4.25,15.5,2.9499999999999997
+27,Pennsylvania,PA: Easton area,Roy Rogers,1,1,open,7,16,4,5,16,3.15
+27,Pennsylvania,PA: Easton area,Roy Rogers,1,2,open,5,19,3,4.75,16,2.96
+28,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,1,open,21,9,7,4.25,16.5,2.6599999999999997
+28,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,2,open,6,25,7,4.25,16.5,2.6799999999999997
+29,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,1,open,1,32,2,4.25,17.5,2.2800000000000002
+29,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,2,open,5,15,3,,16.5,
+30,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,1,open,10,20,7,4.25,16.5,2.5999999999999996
+30,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,2,open,7,25,6,4.25,17.5,2.67
+31,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,1,open,0,27,6,4.25,16.5,2.65
+31,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,2,open,0,42,6,4.25,17.5,2.63
+32,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,1,open,17,4,5,4.5,16.5,2.67
+32,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,2,open,0,22,5,4.25,16.5,
+33,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,1,open,0,24,6,4.25,16,2.67
+33,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,2,open,11,12,2,4.25,17.5,2.59
+34,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,1,open,25,15,,4.5,17,2.77
+34,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,2,open,0,45,2,4.25,18,2.77
+35,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,1,open,6,20,3,4.25,14,2.48
+35,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,2,open,7.5,25,5,4.38,14,2.64
+36,Pennsylvania,PA: Philadelphia suburbs,KFC,0,1,open,6,10,3,4.5,12,5.4
+36,Pennsylvania,PA: Philadelphia suburbs,KFC,0,2,open,4,20,3,4.75,13,4.25
+37,Pennsylvania,PA: Philadelphia suburbs,KFC,0,1,open,0,15,3,4.25,13,4.25
+37,Pennsylvania,PA: Philadelphia suburbs,KFC,0,2,open,6,15,3,4.25,13,4.24
+38,Pennsylvania,PA: Philadelphia suburbs,Wendy's,1,1,open,30,10,3,4.67,12,2.56
+38,Pennsylvania,PA: Philadelphia suburbs,Wendy's,1,2,open,7,18,4,4.5,12,2.69
+39,Pennsylvania,PA: Philadelphia suburbs,Wendy's,1,1,open,8,25,3,4.75,12,2.6500000000000004
+39,Pennsylvania,PA: Philadelphia suburbs,Wendy's,1,2,open,0,28,4,4.5,12,2.82
+40,Pennsylvania,PA: Philadelphia suburbs,Wendy's,0,1,open,0,15,3,4.25,10.5,2.6100000000000003
+40,Pennsylvania,PA: Philadelphia suburbs,Wendy's,0,2,open,0,16,4,4.25,10.5,2.71
+41,Pennsylvania,PA: Philadelphia suburbs,Wendy's,0,1,open,10,20,5,4.25,11.5,2.54
+41,Pennsylvania,PA: Philadelphia suburbs,Wendy's,0,2,open,10,20,5,4.25,12,2.6799999999999997
+42,Pennsylvania,PA: Easton area,KFC,1,1,open,2,12,3,4.75,10,4.02
+42,Pennsylvania,PA: Easton area,KFC,1,2,open,1,14,3,4.25,11,4.32
+43,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,1,open,20,25,4,4.25,15,2.5
+43,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,2,open,0,48,3,4.25,16,2.39
+44,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,1,open,20,55,5,4.5,16,2.4699999999999998
+44,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,2,open,25,10,4,5.05,16,2.4699999999999998
+45,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,1,open,10,30,4,4.25,16,2.48
+45,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,2,open,0,42,4,,16,2.42
+46,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,1,open,15,50,5,4.25,16,
+46,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,2,open,19,29,4,4.25,16,2.55
+47,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,1,open,1,37.5,3,4.25,15.5,2.49
+47,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,2,open,0,32,5,4.25,15.5,2.4699999999999998
+48,Pennsylvania,PA: Philadelphia suburbs,KFC,0,1,open,0,9,3,4.25,8,4.28
+48,Pennsylvania,PA: Philadelphia suburbs,KFC,0,2,open,2,9,3,4.25,9,4.220000000000001
+49,Pennsylvania,PA: Philadelphia suburbs,Wendy's,0,1,open,0,25,3,4.25,11.5,3.69
+49,Pennsylvania,PA: Philadelphia suburbs,Wendy's,0,2,open,0,30,3,,11.5,3.6
+50,Pennsylvania,PA: Philadelphia suburbs,Wendy's,0,1,open,30,10,3,4.25,11.5,2.5
+50,Pennsylvania,PA: Philadelphia suburbs,Wendy's,0,2,open,0,30,3,4.25,11.5,3.6100000000000003
+51,Pennsylvania,PA: Philadelphia suburbs,Wendy's,0,1,open,4,19,4,4.25,11.5,3.4800000000000004
+51,Pennsylvania,PA: Philadelphia suburbs,Wendy's,0,2,open,5,20,4,4.35,11.5,3.6100000000000003
+52,Pennsylvania,PA: Philadelphia suburbs,Wendy's,0,1,open,12,20,3,4.25,12.5,2.53
+52,Pennsylvania,PA: Philadelphia suburbs,Wendy's,0,2,open,10,35,4,4.5,11.5,
+53,Pennsylvania,PA: Easton area,Burger King,0,1,open,,,3,4.5,18,2.81
+53,Pennsylvania,PA: Easton area,Burger King,0,2,open,7,24,4,5,18,2.72
+54,Pennsylvania,PA: Easton area,Burger King,0,1,open,8,18,4,4.75,18,2.72
+54,Pennsylvania,PA: Easton area,Burger King,0,2,open,8,27,3,4.5,18,2.66
+55,Pennsylvania,PA: Easton area,Burger King,0,1,open,0,25,3,4.87,18,
+55,Pennsylvania,PA: Easton area,Burger King,0,2,open,15,15,5,5,18,2.54
+56,Pennsylvania,PA: Easton area,Burger King,0,1,open,2,21,3,4.75,16.5,2.63
+56,Pennsylvania,PA: Easton area,Burger King,0,2,open,27.5,8,3,4.75,18,2.61
+57,Pennsylvania,PA: Easton area,KFC,1,1,open,1,9,3,4.5,10,4.199999999999999
+57,Pennsylvania,PA: Easton area,KFC,1,2,open,0,18,5,5,11,4.3100000000000005
+58,Pennsylvania,PA: Easton area,Roy Rogers,1,1,open,5,20,3,4.25,16,2.89
+58,Pennsylvania,PA: Easton area,Roy Rogers,1,2,open,0,20,5,4.35,15,2.91
+59,Pennsylvania,PA: Easton area,Wendy's,0,1,open,8,17.5,4,4.75,11.5,2.6799999999999997
+59,Pennsylvania,PA: Easton area,Wendy's,0,2,open,14,12,3,,11.5,
+60,Pennsylvania,PA: Easton area,Burger King,0,1,open,25,20,4,4.25,18,2.72
+60,Pennsylvania,PA: Easton area,Burger King,0,2,open,12,23,3,4.25,18,2.74
+61,Pennsylvania,PA: Easton area,Burger King,0,1,open,37.5,2,3,4.25,16.5,2.93
+61,Pennsylvania,PA: Easton area,Burger King,0,2,open,8,25,3,4.9,17,2.71
+62,Pennsylvania,PA: Easton area,Burger King,0,1,open,5,27,4,4.75,17,2.72
+62,Pennsylvania,PA: Easton area,Burger King,0,2,open,26,15,2,4.5,17,2.67
+63,Pennsylvania,PA: Easton area,Burger King,0,1,open,25,8,3,4.5,15,2.81
+63,Pennsylvania,PA: Easton area,Burger King,0,2,open,10,16,3,4.5,15,2.86
+64,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,1,open,6,30,3,4.25,18,2.65
+64,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,2,open,5,30,3,4.75,18,2.9799999999999995
+65,Pennsylvania,PA: Easton area,Burger King,0,1,open,8,28,4,4.25,16.5,2.74
+65,Pennsylvania,PA: Easton area,Burger King,0,2,open,6,20,4,6.25,17,2.69
+66,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,1,open,32,25,4,4.5,19,2.74
+66,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,2,open,8,30,4,4.35,18,2.8000000000000003
+67,Pennsylvania,PA: Easton area,KFC,1,1,open,1,9,3,4.5,10,4.02
+67,Pennsylvania,PA: Easton area,KFC,1,2,open,4,12,3,4.5,11,4.06
+68,Pennsylvania,PA: Easton area,Roy Rogers,0,1,open,4,25,2,4.5,13,2.91
+68,Pennsylvania,PA: Easton area,Roy Rogers,0,2,closed permanently,0,0,0,,,
+69,Pennsylvania,PA: Easton area,Roy Rogers,1,1,open,2,16,3,4.5,12.5,3.1
+69,Pennsylvania,PA: Easton area,Roy Rogers,1,2,open,4,15,2,4.5,12.5,3.2700000000000005
+70,Pennsylvania,PA: Easton area,Wendy's,1,1,open,12,15,3,4.5,12,2.59
+70,Pennsylvania,PA: Easton area,Wendy's,1,2,open,,,5,,12,2.7
+71,Pennsylvania,PA: Easton area,Wendy's,1,1,open,20,10,3,4.75,12,2.6
+71,Pennsylvania,PA: Easton area,Wendy's,1,2,open,21,5.5,3,5,12,2.7199999999999998
+72,Pennsylvania,PA: Easton area,Burger King,0,1,open,14,15,3,4.25,16.5,2.62
+72,Pennsylvania,PA: Easton area,Burger King,0,2,open,30,15,6,4.75,18,2.85
+73,Pennsylvania,PA: Easton area,Burger King,0,1,open,7.5,14,4,4.75,16.5,2.72
+73,Pennsylvania,PA: Easton area,Burger King,0,2,open,35,6.5,3,4.5,18,2.81
+74,Pennsylvania,PA: Easton area,Roy Rogers,1,1,open,7,25,4,4.25,16,3.01
+74,Pennsylvania,PA: Easton area,Roy Rogers,1,2,open,2.5,17.5,3,,15,
+75,Pennsylvania,PA: Easton area,Roy Rogers,1,1,open,4,16,3,4.75,16.5,2.9699999999999998
+75,Pennsylvania,PA: Easton area,Roy Rogers,1,2,open,3,13,3,4.75,15,2.91
+76,Pennsylvania,PA: Easton area,Roy Rogers,0,1,open,5,20,3,4.5,16,2.78
+76,Pennsylvania,PA: Easton area,Roy Rogers,0,2,open,23,16,3,4.25,16,2.95
+77,Pennsylvania,PA: Easton area,Roy Rogers,1,1,open,6,22.5,3,4.75,16,3.01
+77,Pennsylvania,PA: Easton area,Roy Rogers,1,2,open,2,12,2,4.91,14,2.85
+78,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,1,open,2.5,20,3,4.25,16.5,
+78,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,2,open,0,12,8,4.4,16,2.14
+79,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,1,open,2,30,4,4.35,16,2.81
+79,Pennsylvania,PA: Philadelphia suburbs,Burger King,0,2,open,3,23,3,4.25,16,2.69
+80,New Jersey,Central NJ,Burger King,0,1,open,0,22,4,,16,3.01
+80,New Jersey,Central NJ,Burger King,0,2,open,2,40,5,5.05,16,2.93
+81,New Jersey,Central NJ,Burger King,0,1,open,0,20,5,,14.5,3.0199999999999996
+81,New Jersey,Central NJ,Burger King,0,2,open,5,25,4,5.05,14,2.99
+82,New Jersey,Central NJ,Roy Rogers,0,1,open,10,20,4,,12.5,
+82,New Jersey,Central NJ,Roy Rogers,0,2,open,8,24,3,5.05,11.5,3.2699999999999996
+83,New Jersey,North NJ,Roy Rogers,1,1,open,4.5,25.5,2,,11.5,3.2500000000000004
+83,New Jersey,North NJ,Roy Rogers,1,2,open,2,33,3,5.05,11.5,3.1599999999999997
+84,New Jersey,North NJ,Burger King,0,1,open,0,25,9,,17,2.84
+84,New Jersey,North NJ,Burger King,0,2,open,26.5,10,3,5.05,17,2.95
+85,New Jersey,North NJ,KFC,0,1,open,0,13,3,,11,4.04
+85,New Jersey,North NJ,KFC,0,2,open,1,15,2,5.05,11,4.34
+86,New Jersey,North NJ,Wendy's,0,1,open,30,20,4,,12,3.07
+86,New Jersey,North NJ,Wendy's,0,2,open,0,25,4,5.05,12,3.01
+87,New Jersey,North NJ,Burger King,0,1,open,,10,3,,16,2.99
+87,New Jersey,North NJ,Burger King,0,2,open,16,6,4,5.05,16,2.8
+88,New Jersey,North NJ,Burger King,0,1,open,0,34,4,,17,3.2600000000000002
+88,New Jersey,North NJ,Burger King,0,2,open,23,22,4,5.05,18,3.1000000000000005
+89,New Jersey,South NJ,Wendy's,0,1,open,20,10,3,,16,2.98
+89,New Jersey,South NJ,Wendy's,0,2,open,28,10,3,5.25,15,2.9000000000000004
+90,New Jersey,South NJ,Wendy's,0,1,open,0,14,3,,14,2.65
+90,New Jersey,South NJ,Wendy's,0,2,open,8,12,2,,14,3.96
+91,New Jersey,North NJ,Burger King,0,1,open,0,35,3,,16,2.96
+91,New Jersey,North NJ,Burger King,0,2,open,0,35,3,5.05,16,2.9299999999999997
+92,New Jersey,North NJ,Roy Rogers,1,1,open,15,15,3,,17,
+92,New Jersey,North NJ,Roy Rogers,1,2,open,6,20,3,5.05,18,3.21
+93,New Jersey,North NJ,Wendy's,0,1,open,0,30,4,,11.5,2.88
+93,New Jersey,North NJ,Wendy's,0,2,open,35,30,3,5.05,11.5,3.01
+94,New Jersey,South NJ,Burger King,0,1,open,5,19,2,,16,2.73
+94,New Jersey,South NJ,Burger King,0,2,open,4.5,20,2,5.05,16,2.7600000000000002
+95,New Jersey,South NJ,Burger King,1,1,open,9,10,3,,17,2.9
+95,New Jersey,South NJ,Burger King,1,2,open,7,13,3,5.05,17,2.9299999999999997
+96,New Jersey,North NJ,Burger King,1,1,open,0,45,5,,19,3.15
+96,New Jersey,North NJ,Burger King,1,2,open,30,20,5,5.05,18.5,3.1500000000000004
+97,New Jersey,Central NJ,Roy Rogers,1,1,open,2,2,2,5,7,4.720000000000001
+97,New Jersey,Central NJ,Roy Rogers,1,2,open,5,2,2,5.05,8,4.35
+98,New Jersey,Central NJ,KFC,0,1,open,10,8,2,5.12,11,4.4
+98,New Jersey,Central NJ,KFC,0,2,open,4,17,3,5.05,11,4.59
+99,New Jersey,North NJ,Burger King,0,1,open,30,15,4,5.56,16,2.95
+99,New Jersey,North NJ,Burger King,0,2,open,10,20,4,5.05,16,2.8899999999999997
+100,New Jersey,Central NJ,KFC,1,1,open,4,10,4,5,10,4.25
+100,New Jersey,Central NJ,KFC,1,2,open,0,7,4,5.05,10,4.42
+101,New Jersey,North NJ,KFC,0,1,open,6,4,2,5,10,4.65
+101,New Jersey,North NJ,KFC,0,2,open,4,3,2,5.05,10,4.55
+102,New Jersey,Central NJ,KFC,0,1,open,4,16,3,5.25,11,4.65
+102,New Jersey,Central NJ,KFC,0,2,open,6,15,5,5.05,12.5,4.6899999999999995
+103,New Jersey,North NJ,Roy Rogers,0,1,open,12,20,4,5,17,3.04
+103,New Jersey,North NJ,Roy Rogers,0,2,open,6,11,5,5.05,17,3.2199999999999998
+104,New Jersey,Central NJ,Wendy's,0,1,open,8,12,4,5.5,13,4.5
+104,New Jersey,Central NJ,Wendy's,0,2,open,10,35,6,5.05,12.5,3.03
+105,New Jersey,North NJ,Roy Rogers,0,1,open,6,50,4,5,19,3.42
+105,New Jersey,North NJ,Roy Rogers,0,2,open,4,60,3,5.05,19,3.17
+106,New Jersey,North NJ,Roy Rogers,1,1,open,13,10,3,5,17,3.16
+106,New Jersey,North NJ,Roy Rogers,1,2,open,10,12,2,5.05,16,3.17
+107,New Jersey,North NJ,Wendy's,0,1,open,25,13,3,5,12,3.1
+107,New Jersey,North NJ,Wendy's,0,2,open,0,45,4,5.05,11.5,4.16
+108,New Jersey,North NJ,Wendy's,0,1,open,8,14.5,3,5,13.5,3.15
+108,New Jersey,North NJ,Wendy's,0,2,open,25,8,4,5.05,13.5,3.1399999999999997
+109,New Jersey,North NJ,Wendy's,0,1,open,12.5,20,2,5,13.5,4.17
+109,New Jersey,North NJ,Wendy's,0,2,open,,,4,5.05,14,2.99
+110,New Jersey,Central NJ,Burger King,0,1,open,7,20,3,5.5,12.5,3.16
+110,New Jersey,Central NJ,Burger King,0,2,open,0,35,3,5.05,12.5,3.17
+111,New Jersey,Central NJ,Burger King,1,1,open,10,6,3,5,16,3.08
+111,New Jersey,Central NJ,Burger King,1,2,open,6,25,6,5.5,16,3.17
+112,New Jersey,Central NJ,KFC,0,1,open,0,25,5,5,10,4.42
+112,New Jersey,Central NJ,KFC,0,2,open,2,20,4,5.05,10,4.37
+113,New Jersey,North NJ,Wendy's,0,1,open,12.5,10,3,5,11.5,2.71
+113,New Jersey,North NJ,Wendy's,0,2,open,,,2,5.05,12.5,3.1500000000000004
+114,New Jersey,North NJ,Wendy's,0,1,open,4,26,3,5,14,3.1
+114,New Jersey,North NJ,Wendy's,0,2,open,5,25,6,5.05,12.5,4.27
+115,New Jersey,Central NJ,KFC,1,1,open,6.5,7.5,2,5,11,4.25
+115,New Jersey,Central NJ,KFC,1,2,open,3,16,2,5.05,11,4.16
+116,New Jersey,Central NJ,Roy Rogers,0,1,open,20,20,3,5.25,16,2.84
+116,New Jersey,Central NJ,Roy Rogers,0,2,open,7,18,4,5.05,16,3.0000000000000004
+117,New Jersey,Central NJ,Roy Rogers,0,1,open,15,25,4,5.5,17,3.18
+117,New Jersey,Central NJ,Roy Rogers,0,2,open,8,22,3,5.05,15,3.21
+118,New Jersey,Central NJ,Wendy's,0,1,open,,,2,5.5,12.5,2.96
+118,New Jersey,Central NJ,Wendy's,0,2,open,11,25,5,5.5,12,
+119,New Jersey,Central NJ,Wendy's,0,1,open,0,30,3,5.37,11.5,2.96
+119,New Jersey,Central NJ,Wendy's,0,2,closed temporarily,,,,,,
+120,New Jersey,Central NJ,Wendy's,0,1,open,10,30,3,5.05,12.5,2.8200000000000003
+120,New Jersey,Central NJ,Wendy's,0,2,open,4,37,3,5.05,12.5,3.1399999999999997
+121,New Jersey,North NJ,Burger King,0,1,open,5,17,3,5,16,2.96
+121,New Jersey,North NJ,Burger King,0,2,open,10,8,4,5.28,16,2.96
+122,New Jersey,North NJ,Burger King,0,1,open,8.5,6.5,3,5.12,14,2.96
+122,New Jersey,North NJ,Burger King,0,2,open,6,0,3,5.25,14,2.95
+123,New Jersey,North NJ,Burger King,0,1,open,4.5,30,4,5.25,17,2.96
+123,New Jersey,North NJ,Burger King,0,2,open,7.5,30,4,5.05,17,2.9299999999999997
+124,New Jersey,North NJ,Burger King,0,1,open,1,12,3,5,15,2.9400000000000004
+124,New Jersey,North NJ,Burger King,0,2,closed permanently,0,0,0,,,
+125,New Jersey,North NJ,Burger King,0,1,open,35,15,4,5.12,15,3.14
+125,New Jersey,North NJ,Burger King,0,2,open,12,13.5,5,5.05,15,3.0399999999999996
+126,New Jersey,North NJ,KFC,0,1,open,10,5,3,5,12,4.1
+126,New Jersey,North NJ,KFC,0,2,open,12,8,2,5.5,11,4.25
+127,New Jersey,North NJ,Roy Rogers,1,1,open,8,25,4,5,17,3.2
+127,New Jersey,North NJ,Roy Rogers,1,2,open,26,12,4,5.05,17,3.2199999999999998
+128,New Jersey,North NJ,Roy Rogers,1,1,open,12,18,3,5,16.5,3.33
+128,New Jersey,North NJ,Roy Rogers,1,2,open,1.5,33,3,5.05,15,
+129,New Jersey,North NJ,Roy Rogers,1,1,open,4,30,4,5,19,3.2
+129,New Jersey,North NJ,Roy Rogers,1,2,open,5,15,3,5.05,17,3.2199999999999998
+130,New Jersey,North NJ,Wendy's,0,1,open,20,10,3,5,12.5,3.0100000000000002
+130,New Jersey,North NJ,Wendy's,0,2,open,10,17,4,5.05,12.5,3.08
+131,New Jersey,North NJ,Burger King,1,1,open,12,33,4,5,16,3.08
+131,New Jersey,North NJ,Burger King,1,2,open,20,6,4,5.05,16,3.21
+132,New Jersey,North NJ,Burger King,1,1,open,10,20,3,5,16,3.2
+132,New Jersey,North NJ,Burger King,1,2,open,20,20,4,5.05,16,3.58
+133,New Jersey,North NJ,Roy Rogers,0,1,open,4,20,3,5.62,15,3.27
+133,New Jersey,North NJ,Roy Rogers,0,2,open,5,17.5,3,5.05,15,3.2199999999999998
+134,New Jersey,North NJ,Roy Rogers,1,1,open,5,42,4,5,16,3.15
+134,New Jersey,North NJ,Roy Rogers,1,2,open,7,30,4,5.05,15,3.8
+135,New Jersey,North NJ,Wendy's,1,1,open,8,19,4,5,11.5,2.86
+135,New Jersey,North NJ,Wendy's,1,2,open,0,30,3,5.05,12.5,4.01
+136,New Jersey,North NJ,Burger King,0,1,open,23,10,4,5,17,2.77
+136,New Jersey,North NJ,Burger King,0,2,open,5,21,5,5.05,17,2.95
+137,New Jersey,North NJ,Burger King,0,1,open,0,10,3,5,16,
+137,New Jersey,North NJ,Burger King,0,2,open,10,4,3,5.05,16,2.63
+138,New Jersey,North NJ,Roy Rogers,1,1,open,15,35,3,5.1,17,3.2600000000000002
+138,New Jersey,North NJ,Roy Rogers,1,2,open,15,15,3,5.05,17,3.1500000000000004
+139,New Jersey,North NJ,Roy Rogers,0,1,open,15,25,4,5,16,3.2
+139,New Jersey,North NJ,Roy Rogers,0,2,open,15,,4,5.05,16,3.25
+140,New Jersey,North NJ,Roy Rogers,1,1,open,25,10,3,5.25,17,3.18
+140,New Jersey,North NJ,Roy Rogers,1,2,open,12,10,3,5.05,16,3.2199999999999998
+141,New Jersey,North NJ,Roy Rogers,0,1,open,15,8,3,5.5,13.5,3.2399999999999998
+141,New Jersey,North NJ,Roy Rogers,0,2,open,8,12,4,5.05,13,3.2700000000000005
+142,New Jersey,South NJ,Burger King,0,1,open,13,12,4,5,14.5,2.72
+142,New Jersey,South NJ,Burger King,0,2,open,15,15,4,5.05,14.5,
+143,New Jersey,South NJ,Burger King,1,1,open,10,18,4,5,15,2.72
+143,New Jersey,South NJ,Burger King,1,2,open,0,42.5,2,5.05,15,2.56
+144,New Jersey,South NJ,KFC,1,1,open,0,13,2,5,11,4.15
+144,New Jersey,South NJ,KFC,1,2,open,0,15,3,5.05,12,3.9099999999999997
+145,New Jersey,South NJ,KFC,1,1,open,4,11,3,5.05,11,4.029999999999999
+145,New Jersey,South NJ,KFC,1,2,open,2,14,3,5.25,12,3.9899999999999998
+146,New Jersey,South NJ,KFC,1,1,open,0,15,2,5.5,10,3.9899999999999998
+146,New Jersey,South NJ,KFC,1,2,open,3,7,3,5.05,11,
+147,New Jersey,South NJ,KFC,1,1,open,5,10,3,5,10.5,3.88
+147,New Jersey,South NJ,KFC,1,2,open,5,15,3,5.05,12,4
+148,New Jersey,North NJ,Burger King,1,1,open,5,16,4,5.3,16,3.0199999999999996
+148,New Jersey,North NJ,Burger King,1,2,open,4,9,6,5.05,16,2.99
+149,New Jersey,North NJ,KFC,1,1,open,3,8,2,5,11.5,4.25
+149,New Jersey,North NJ,KFC,1,2,open,6,12,2,5.05,11.5,4.21
+150,New Jersey,North NJ,KFC,1,1,open,8,12,5,5,10.5,4.25
+150,New Jersey,North NJ,KFC,1,2,open,2,7,1,5.05,10.5,4.1
+151,New Jersey,South NJ,KFC,0,1,open,5,9,2,5,12,4.37
+151,New Jersey,South NJ,KFC,0,2,open,4,6,3,5.05,11,4.32
+152,New Jersey,South NJ,KFC,0,1,open,3,14,3,5,12.5,4.42
+152,New Jersey,South NJ,KFC,0,2,open,4,11,2,5.05,12,4.32
+153,New Jersey,South NJ,Roy Rogers,0,1,open,20,46,5,5.25,24,
+153,New Jersey,South NJ,Roy Rogers,0,2,open,22,39,5,5.05,24,3.3200000000000003
+154,New Jersey,South NJ,Roy Rogers,1,1,open,18,45,5,5.15,24,
+154,New Jersey,South NJ,Roy Rogers,1,2,open,0,45,4,5.05,24,
+155,New Jersey,South NJ,Wendy's,0,1,open,4,16,3,5.42,15.5,2.8200000000000003
+155,New Jersey,South NJ,Wendy's,0,2,open,3,20,3,5.67,14.5,2.99
+156,New Jersey,South NJ,Burger King,0,1,open,10,10,3,5,12.5,2.73
+156,New Jersey,South NJ,Burger King,0,2,open,0,20,3,5.05,12.5,2.65
+157,New Jersey,South NJ,Roy Rogers,1,1,open,2.5,27,5,5,16,2.9800000000000004
+157,New Jersey,South NJ,Roy Rogers,1,2,open,0,20,4,5.05,15,2.96
+158,New Jersey,South NJ,Wendy's,0,1,open,14,7,3,5.06,10.5,2.76
+158,New Jersey,South NJ,Wendy's,0,2,open,9,7,3,5.05,10.5,2.79
+159,New Jersey,South NJ,Wendy's,0,1,open,11.5,10,4,5.05,11.5,2.81
+159,New Jersey,South NJ,Wendy's,0,2,open,0,28,4,5.05,11.5,2.9000000000000004
+160,New Jersey,North NJ,Wendy's,0,1,open,4.5,20,3,5,11.5,2.76
+160,New Jersey,North NJ,Wendy's,0,2,open,21,6,3,5.25,12.5,4.1899999999999995
+161,New Jersey,North NJ,Burger King,0,1,open,12,23,4,5,16,3.0300000000000002
+161,New Jersey,North NJ,Burger King,0,2,open,11,22,5,5.25,16,
+162,New Jersey,North NJ,Burger King,1,1,open,14,12,4,5,15.5,2.99
+162,New Jersey,North NJ,Burger King,1,2,open,18,15,4,5.05,15.5,3.06
+163,New Jersey,North NJ,Burger King,0,1,open,25,10,4,5.25,15,
+163,New Jersey,North NJ,Burger King,0,2,open,0,25,4,5.5,15,3
+164,New Jersey,North NJ,Burger King,1,1,open,10,8,4,5,18.5,3.16
+164,New Jersey,North NJ,Burger King,1,2,open,20,15,4,5.05,19,3.0700000000000003
+165,New Jersey,North NJ,Burger King,0,1,open,10,20,4,5,16.5,3.54
+165,New Jersey,North NJ,Burger King,0,2,open,15,15,5,5.05,16.5,3.6900000000000004
+166,New Jersey,North NJ,Roy Rogers,1,1,open,13,31,,5.05,18,3.27
+166,New Jersey,North NJ,Roy Rogers,1,2,open,11,23,3,5.05,16,3.2199999999999998
+167,New Jersey,North NJ,Wendy's,1,1,open,12,35,4,5,11.5,
+167,New Jersey,North NJ,Wendy's,1,2,open,17,22,4,5.5,12.5,3.7699999999999996
+168,New Jersey,North NJ,Wendy's,1,1,open,5,10,2,5.75,10.5,3.7199999999999998
+168,New Jersey,North NJ,Wendy's,1,2,open,8,7,3,5.5,10.5,4.529999999999999
+169,New Jersey,North NJ,Burger King,0,1,open,3,60,2,5,15,3.01
+169,New Jersey,North NJ,Burger King,0,2,open,0,15,3,5.05,15,3.1399999999999997
+170,New Jersey,Central NJ,Burger King,0,1,open,16,30,4,4.5,16,2.61
+170,New Jersey,Central NJ,Burger King,0,2,open,20,40,4,5.05,16,2.74
+171,New Jersey,Central NJ,Burger King,0,1,open,10,6,3,4.75,14,2.93
+171,New Jersey,Central NJ,Burger King,0,2,open,7.5,10,3,5.25,15,3
+172,New Jersey,Central NJ,KFC,0,1,open,6,13,3,4.25,10,5.1
+172,New Jersey,Central NJ,KFC,0,2,open,4,7,3,5.05,11,4.74
+173,New Jersey,Central NJ,Roy Rogers,0,1,open,10,12,3,4.75,12.5,4.1899999999999995
+173,New Jersey,Central NJ,Roy Rogers,0,2,open,5,30,4,5.05,13.5,3.48
+174,New Jersey,Central NJ,Roy Rogers,0,1,open,5,30,4,4.5,17,
+174,New Jersey,Central NJ,Roy Rogers,0,2,open,10,30,4,5.15,17,2.9299999999999997
+175,New Jersey,Central NJ,Wendy's,0,1,open,,25,4,4.8,12,4.21
+175,New Jersey,Central NJ,Wendy's,0,2,open,15,25,3,5.05,13,2.96
+176,New Jersey,Central NJ,Burger King,0,1,open,12,40,4,4.37,16,2.56
+176,New Jersey,Central NJ,Burger King,0,2,open,0,32,4,5.05,16,3.04
+177,New Jersey,Central NJ,Burger King,0,1,open,15,20,4,4.25,16,2.74
+177,New Jersey,Central NJ,Burger King,0,2,open,15,15,4,5.05,16,2.75
+178,New Jersey,Central NJ,Burger King,0,1,open,10,30,4,4.25,16,2.89
+178,New Jersey,Central NJ,Burger King,0,2,open,12,24,3,5.05,16,2.86
+179,New Jersey,Central NJ,Burger King,0,1,open,6.5,23.5,3,4.37,16,2.75
+179,New Jersey,Central NJ,Burger King,0,2,open,15,15,4,5.05,16,2.87
+180,New Jersey,Central NJ,KFC,0,1,open,0,25,3,4.5,10,4.67
+180,New Jersey,Central NJ,KFC,0,2,open,2,11,3,5,11,4.7
+181,New Jersey,Central NJ,Roy Rogers,0,1,open,3,25,4,4.6,17,2.95
+181,New Jersey,Central NJ,Roy Rogers,0,2,open,5,20,3,5.05,17,4.0600000000000005
+182,New Jersey,Central NJ,Roy Rogers,0,1,open,6,22,4,4.5,17,
+182,New Jersey,Central NJ,Roy Rogers,0,2,open,7,17,3,5.05,17,3
+183,New Jersey,Central NJ,Roy Rogers,0,1,open,0,20,4,4.37,17,4.08
+183,New Jersey,Central NJ,Roy Rogers,0,2,open,4,35,4,5.05,17,2.94
+184,New Jersey,Central NJ,Roy Rogers,0,1,open,15,25,3,4.25,17,
+184,New Jersey,Central NJ,Roy Rogers,0,2,open,8,38,5,5.05,17,2.6799999999999997
+185,New Jersey,South NJ,Burger King,0,1,open,4,31,4,4.25,16,2.89
+185,New Jersey,South NJ,Burger King,0,2,open,6,44,5,5.05,16,2.92
+186,New Jersey,South NJ,KFC,0,1,open,5,12,3,4.45,10.5,3.99
+186,New Jersey,South NJ,KFC,0,2,open,0,11,2,5.05,10,4.3100000000000005
+187,New Jersey,South NJ,Roy Rogers,0,1,open,3,15,4,4.35,16,2.8499999999999996
+187,New Jersey,South NJ,Roy Rogers,0,2,open,3,15,2,5.05,15,3.04
+188,New Jersey,North NJ,Burger King,0,1,open,0,25,3,4.5,16,2.96
+188,New Jersey,North NJ,Burger King,0,2,open,14,14,3,5.05,16.5,2.9299999999999997
+189,New Jersey,Central NJ,Burger King,0,1,open,15,15,4,4.75,16,3.0199999999999996
+189,New Jersey,Central NJ,Burger King,0,2,open,15,20,4,5.05,,2.99
+190,New Jersey,North NJ,KFC,0,1,open,0,14,1,4.5,10,4.79
+190,New Jersey,North NJ,KFC,0,2,open,6,2,3,,10,
+191,New Jersey,North NJ,KFC,0,1,open,0,7,2,4.5,11,4.630000000000001
+191,New Jersey,North NJ,KFC,0,2,open,0,13,3,5.05,11,4.74
+192,New Jersey,North NJ,Roy Rogers,0,1,open,10,20.5,3,4.5,11.5,3.2
+192,New Jersey,North NJ,Roy Rogers,0,2,open,2,25,3,5.05,11.5,4.609999999999999
+193,New Jersey,North NJ,Roy Rogers,1,1,open,5,15,3,4.95,11.5,3.2
+193,New Jersey,North NJ,Roy Rogers,1,2,open,11,7,3,5.05,11.5,3.06
+194,New Jersey,North NJ,Wendy's,0,1,open,25,6.5,4,4.5,11.5,4.04
+194,New Jersey,North NJ,Wendy's,0,2,open,13,18,3,5.05,11.5,
+195,New Jersey,Central NJ,Burger King,0,1,open,15,20,5,4.25,17,2.98
+195,New Jersey,Central NJ,Burger King,0,2,open,10,20,6,5.05,17.5,2.5599999999999996
+196,New Jersey,North NJ,Burger King,1,1,open,26,6,,4.25,18,3.24
+196,New Jersey,North NJ,Burger King,1,2,open,15,10,4,5.05,18,3.21
+197,New Jersey,North NJ,Burger King,0,1,open,20,15,3,4.5,16,2.96
+197,New Jersey,North NJ,Burger King,0,2,open,13,13,3,5.05,16,2.95
+198,New Jersey,North NJ,Burger King,0,1,open,0,20,4,4.8,15.5,3.0200000000000005
+198,New Jersey,North NJ,Burger King,0,2,closed temporarily,,,3,5.05,,
+199,New Jersey,North NJ,Burger King,0,1,open,15,18,3,4.25,17,2.96
+199,New Jersey,North NJ,Burger King,0,2,open,26,10,4,5.05,17,2.95
+200,New Jersey,North NJ,Burger King,0,1,open,5,15,6,4.5,13.5,3.4
+200,New Jersey,North NJ,Burger King,0,2,open,4,17.5,5,5.05,13.5,3.59
+201,New Jersey,North NJ,Burger King,0,1,open,30,10,3,4.25,17,3.11
+201,New Jersey,North NJ,Burger King,0,2,open,13,17,3,5.05,17,2.95
+202,New Jersey,North NJ,Burger King,0,1,open,0,27,3,4.25,18,3.0700000000000003
+202,New Jersey,North NJ,Burger King,0,2,open,0,27,3,5.05,18,3.27
+203,New Jersey,North NJ,Burger King,0,1,open,35,20,5,4.5,16,3.03
+203,New Jersey,North NJ,Burger King,0,2,open,10,30,5,5.05,16,3.01
+204,New Jersey,North NJ,Burger King,0,1,open,0,35,3,4.75,17,2.96
+204,New Jersey,North NJ,Burger King,0,2,open,29,14,3,5.05,17,2.95
+205,New Jersey,North NJ,KFC,0,1,open,0,7,3,4.25,12,4.57
+205,New Jersey,North NJ,KFC,0,2,open,14,0,3,5.05,11,4.53
+206,New Jersey,North NJ,KFC,0,1,open,3,15,3,4.25,11,5.21
+206,New Jersey,North NJ,KFC,0,2,open,4,11,3,5.05,11,5.07
+207,New Jersey,North NJ,Roy Rogers,1,1,open,8,32,4,4.25,17,3.16
+207,New Jersey,North NJ,Roy Rogers,1,2,open,25,15,6,5.05,16.5,3.2199999999999998
+208,New Jersey,North NJ,Roy Rogers,1,1,open,6,25,3,4.5,17,3.25
+208,New Jersey,North NJ,Roy Rogers,1,2,open,8,18,3,5.05,16,3.2199999999999998
+209,New Jersey,North NJ,Wendy's,0,1,open,4.5,20,,4.25,11.5,3.1
+209,New Jersey,North NJ,Wendy's,0,2,open,11,14,3,5.05,12.5,3.09
+210,New Jersey,Central NJ,Burger King,0,1,open,4,30,5,4.5,16,2.8000000000000003
+210,New Jersey,Central NJ,Burger King,0,2,open,12,30,5,5.05,16,2.89
+211,New Jersey,Central NJ,Burger King,0,1,open,11,11,4,4.25,15,3.1
+211,New Jersey,Central NJ,Burger King,0,2,open,9,12,4,5.05,15,3.14
+212,New Jersey,Central NJ,Burger King,0,1,open,0,15,,4.5,15,2.94
+212,New Jersey,Central NJ,Burger King,0,2,open,0,30,5,5.05,15,3.0300000000000002
+213,New Jersey,South NJ,Burger King,0,1,open,3,35,3,4.25,15,2.8400000000000003
+213,New Jersey,South NJ,Burger King,0,2,open,4,37,4,5.05,15,2.86
+214,New Jersey,Central NJ,Burger King,1,1,open,8,22,4,4.25,17,3.06
+214,New Jersey,Central NJ,Burger King,1,2,open,0,30,4,5.05,17,3.21
+215,New Jersey,Central NJ,Burger King,1,1,open,4,18,4,4.25,15,3.0700000000000003
+215,New Jersey,Central NJ,Burger King,1,2,open,14,6,3,5.05,15,3.17
+216,New Jersey,North NJ,Burger King,1,1,open,2.5,30,3,4.25,16,
+216,New Jersey,North NJ,Burger King,1,2,open,5,25,5,5.05,16,3.21
+217,New Jersey,Central NJ,KFC,0,1,open,18,3,4,4.25,10,4.42
+217,New Jersey,Central NJ,KFC,0,2,open,0,14,3,5.05,10,4.33
+218,New Jersey,North NJ,KFC,0,1,open,0,15,2,4.25,10,4.73
+218,New Jersey,North NJ,KFC,0,2,open,0,15,5,5.05,10.5,4.58
+219,New Jersey,Central NJ,KFC,0,1,open,0,12,4,4.25,10,4.33
+219,New Jersey,Central NJ,KFC,0,2,open,2.5,11,3,5.05,10,4.390000000000001
+220,New Jersey,Central NJ,KFC,0,1,open,0,20,4,4.25,10,4.42
+220,New Jersey,Central NJ,KFC,0,2,open,3,13,3,5.05,10,4.48
+221,New Jersey,Central NJ,Roy Rogers,1,1,open,60,40,5,4.75,24,
+221,New Jersey,Central NJ,Roy Rogers,1,2,open,30,50,4,5.05,24,4.709999999999999
+222,New Jersey,Central NJ,Roy Rogers,0,1,open,4.5,15,3,4.75,15,3.44
+222,New Jersey,Central NJ,Roy Rogers,0,2,open,10,12,3,5.05,15,3.3
+223,New Jersey,South NJ,Roy Rogers,0,1,open,12,13,3,4.4,16,3.04
+223,New Jersey,South NJ,Roy Rogers,0,2,open,0,27,2,5.05,15,3.13
+224,New Jersey,Central NJ,Wendy's,0,1,open,40,20,3,4.62,11.5,2.73
+224,New Jersey,Central NJ,Wendy's,0,2,open,11,10,3,5.05,12.5,2.78
+225,New Jersey,North NJ,Burger King,0,1,open,0,40,4,4.25,16.5,2.99
+225,New Jersey,North NJ,Burger King,0,2,open,0,45,4,5.05,16.5,3.2
+226,New Jersey,North NJ,Burger King,0,1,open,0,35,3,4.25,16,2.96
+226,New Jersey,North NJ,Burger King,0,2,open,2,25,3,5.05,16,2.95
+227,New Jersey,North NJ,Burger King,1,1,open,6,11,3,4.25,14.5,3.0700000000000003
+227,New Jersey,North NJ,Burger King,1,2,open,13.5,10,2,5.05,14,
+228,New Jersey,North NJ,Burger King,0,1,open,13.5,15,4,4.25,17,3.3400000000000003
+228,New Jersey,North NJ,Burger King,0,2,open,11,24,5,5.05,17,3.4400000000000004
+229,New Jersey,North NJ,Roy Rogers,0,1,open,17,14,3,4.25,16,3.24
+229,New Jersey,North NJ,Roy Rogers,0,2,open,20,14.5,3,5.05,16,3.32
+230,New Jersey,Central NJ,Burger King,0,1,open,0,35,5,4.75,16,2.9699999999999998
+230,New Jersey,Central NJ,Burger King,0,2,open,20,40,4,5.25,16.5,2.9899999999999998
+231,New Jersey,Central NJ,Burger King,0,1,open,20,25,4,4.75,17,3.07
+231,New Jersey,Central NJ,Burger King,0,2,open,6,15,4,5.05,17,3.01
+232,New Jersey,Central NJ,Burger King,0,1,open,4,22.5,2,4.25,13,3.62
+232,New Jersey,Central NJ,Burger King,0,2,open,22,12,3,5.05,13,3.55
+233,New Jersey,North NJ,Burger King,0,1,open,10,15,4,4.25,15,3.0199999999999996
+233,New Jersey,North NJ,Burger King,0,2,open,18,20,3,5.05,15,2.99
+234,New Jersey,North NJ,Burger King,0,1,open,12,19,3,4.75,16.5,2.92
+234,New Jersey,North NJ,Burger King,0,2,open,18,13,4,5.05,17.5,2.8899999999999997
+235,New Jersey,Central NJ,Burger King,1,1,open,0,32,3,4.5,16,3.15
+235,New Jersey,Central NJ,Burger King,1,2,open,0,30,4,5.05,16,3.1500000000000004
+236,New Jersey,North NJ,Burger King,0,1,open,1,38,5,4.25,12.5,
+236,New Jersey,North NJ,Burger King,0,2,open,10,50,6,5.05,12.5,3.2399999999999998
+237,New Jersey,Central NJ,Burger King,0,1,open,8,10,3,4.25,15,3.0100000000000002
+237,New Jersey,Central NJ,Burger King,0,2,open,21,6,4,5.05,15,3.2199999999999998
+238,New Jersey,Central NJ,KFC,0,1,open,15,0,4,4.5,12.5,4.1
+238,New Jersey,Central NJ,KFC,0,2,open,0,15,2,5.05,12,4.51
+239,New Jersey,Central NJ,Roy Rogers,1,1,open,7,25.5,3,4.5,18,3.1900000000000004
+239,New Jersey,Central NJ,Roy Rogers,1,2,open,2,38,4,5.05,16,3.2199999999999998
+240,New Jersey,Central NJ,Roy Rogers,1,1,open,20,20,5,4.5,24,4.64
+240,New Jersey,Central NJ,Roy Rogers,1,2,open,15,20,3,5.5,14,
+241,New Jersey,Central NJ,Roy Rogers,1,1,open,6,16,2,4.75,17,3.2500000000000004
+241,New Jersey,Central NJ,Roy Rogers,1,2,open,3,20,3,5.05,15,4.279999999999999
+242,New Jersey,Central NJ,Roy Rogers,0,1,open,5.5,25,3,4.62,16,
+242,New Jersey,Central NJ,Roy Rogers,0,2,open,6,27.5,3,5.05,16,3.11
+243,New Jersey,Central NJ,Roy Rogers,1,1,open,14.5,14.5,5,4.25,17,3.2900000000000005
+243,New Jersey,Central NJ,Roy Rogers,1,2,refused,,,,,16,
+244,New Jersey,North NJ,Roy Rogers,1,1,open,15,25,3,4.25,16,3.2
+244,New Jersey,North NJ,Roy Rogers,1,2,open,12,30,5,5.05,15,3.2700000000000005
+245,New Jersey,Central NJ,Wendy's,0,1,open,0,40,3,4.5,11.5,2.83
+245,New Jersey,Central NJ,Wendy's,0,2,open,5,35,5,5.67,11.5,2.99
+246,New Jersey,Central NJ,Wendy's,0,1,open,10,15,4,4.75,12.5,2.99
+246,New Jersey,Central NJ,Wendy's,0,2,open,10,25,3,5.05,12.5,3.2300000000000004
+247,New Jersey,North NJ,Wendy's,0,1,open,15,35,4,4.25,11.5,3.07
+247,New Jersey,North NJ,Wendy's,0,2,open,40,31,5,5.05,11.5,3.16
+248,New Jersey,North NJ,Burger King,0,1,open,8,20,5,4.8,16,3.12
+248,New Jersey,North NJ,Burger King,0,2,open,0,32,4.5,5.05,16,3.09
+249,New Jersey,North NJ,Burger King,0,1,open,0,20,4,4.5,16,2.96
+249,New Jersey,North NJ,Burger King,0,2,open,8,10,3,5.05,16,2.9299999999999997
+250,New Jersey,North NJ,Burger King,0,1,open,0,27.5,3.5,4.67,16,3.0100000000000002
+250,New Jersey,North NJ,Burger King,0,2,open,12,20,3,5.75,15,2.87
+251,New Jersey,North NJ,Burger King,0,1,open,8,15,3,4.87,15,3.03
+251,New Jersey,North NJ,Burger King,0,2,open,2,18,2,5.05,15,2.9
+252,New Jersey,North NJ,KFC,0,1,open,2,7,3,4.5,10,3.96
+252,New Jersey,North NJ,KFC,0,2,open,3,4,4,5.05,11.5,4.38
+253,New Jersey,North NJ,KFC,0,1,open,6,12,2,4.5,10.5,4.17
+253,New Jersey,North NJ,KFC,0,2,open,10,5,4,5.25,11.5,4.28
+254,New Jersey,North NJ,Roy Rogers,1,1,open,0,40,3,4.75,16.5,3.2
+254,New Jersey,North NJ,Roy Rogers,1,2,open,3,30,3,5.05,15.5,3.17
+255,New Jersey,North NJ,Wendy's,0,1,open,8,32,5,4.75,11.5,2.86
+255,New Jersey,North NJ,Wendy's,0,2,open,0,35,4,5.05,12.5,3.21
+256,New Jersey,North NJ,Burger King,0,1,open,5,20,4,4.25,15,2.96
+256,New Jersey,North NJ,Burger King,0,2,open,0,32,4,5.25,16,3.2
+257,New Jersey,North NJ,Burger King,1,1,open,2,32,3,4.25,16,3.08
+257,New Jersey,North NJ,Burger King,1,2,open,10,12.5,5,5.05,16,3.25
+258,New Jersey,North NJ,Burger King,0,1,open,0,24,5,4.75,12.5,3.2
+258,New Jersey,North NJ,Burger King,0,2,open,7,23,3,5.05,13,3.17
+259,New Jersey,North NJ,Burger King,0,1,open,6,40,10,4.85,17.5,2.9899999999999998
+259,New Jersey,North NJ,Burger King,0,2,open,11,30,5,5.05,18,3.0300000000000002
+260,New Jersey,North NJ,Burger King,0,1,open,11,20,4,4.75,16,3.04
+260,New Jersey,North NJ,Burger King,0,2,open,20,20,3,5.05,16,2.93
+261,New Jersey,North NJ,Burger King,0,1,open,15,21,4,4.62,16,
+261,New Jersey,North NJ,Burger King,0,2,open,20,27.5,4,5.05,16,
+262,New Jersey,North NJ,KFC,1,1,open,13,12,3,4.25,10,4.1
+262,New Jersey,North NJ,KFC,1,2,open,1,10,3,5.05,10.5,4.59
+263,New Jersey,North NJ,KFC,0,1,open,2,12,3,4.25,10.5,4.16
+263,New Jersey,North NJ,KFC,0,2,open,2,10,4,5.05,11,4.27
+264,New Jersey,North NJ,KFC,0,1,open,8,3,4,4.5,11,4.73
+264,New Jersey,North NJ,KFC,0,2,open,0,17.5,4,5.05,12,4.95
+265,New Jersey,South NJ,KFC,0,1,open,3,15,3,4.5,11,4.73
+265,New Jersey,South NJ,KFC,0,2,open,0,15,3,5.05,10,4.779999999999999
+266,New Jersey,North NJ,KFC,0,1,open,12,4,4,4.62,11,4.73
+266,New Jersey,North NJ,KFC,0,2,open,15,10,2,5.05,10.5,4.8
+267,New Jersey,Central NJ,KFC,0,1,open,2,9,3,4.5,10.5,4.73
+267,New Jersey,Central NJ,KFC,0,2,open,2,6,3,5.05,10.5,4.8
+268,New Jersey,North NJ,Roy Rogers,0,1,open,10,20,4,4.75,16,3.09
+268,New Jersey,North NJ,Roy Rogers,0,2,open,12,18,4,5.05,16,3.1799999999999997
+269,New Jersey,North NJ,Roy Rogers,0,1,open,4,15,3,4.75,15,3.3100000000000005
+269,New Jersey,North NJ,Roy Rogers,0,2,open,0,19,3,5.05,15,3.2199999999999998
+270,New Jersey,North NJ,Wendy's,0,1,open,20,10,4,4.87,12,2.8200000000000003
+270,New Jersey,North NJ,Wendy's,0,2,open,4.5,30,3,5.25,12.5,3.1500000000000004
+271,New Jersey,North NJ,Wendy's,0,1,open,1,13,3,4.5,11,2.79
+271,New Jersey,North NJ,Wendy's,0,2,open,4,9,3,5.05,13,3.17
+272,New Jersey,North NJ,Wendy's,0,1,open,0,30,3,4.25,11.5,2.97
+272,New Jersey,North NJ,Wendy's,0,2,open,8,25,3,5.05,12.5,3.8899999999999997
+273,New Jersey,North NJ,Burger King,0,1,open,,,4,4.25,16,2.96
+273,New Jersey,North NJ,Burger King,0,2,open,10,32,4,5.05,16,2.9299999999999997
+274,New Jersey,North NJ,KFC,0,1,open,0,12,3,4.35,10,3.9899999999999998
+274,New Jersey,North NJ,KFC,0,2,open,11,3,4,5.05,10.5,4.26
+275,New Jersey,North NJ,Burger King,0,1,open,0,60,3,4.25,18,2.95
+275,New Jersey,North NJ,Burger King,0,2,open,5,40,4,5.05,17.5,2.9699999999999998
+276,New Jersey,North NJ,Burger King,0,1,open,0,33,3,4.5,17,3.0300000000000002
+276,New Jersey,North NJ,Burger King,0,2,open,16,22,3,5.05,17,2.95
+277,New Jersey,North NJ,Burger King,0,1,open,30,14,4,4.25,19,2.75
+277,New Jersey,North NJ,Burger King,0,2,open,13,11,4,5.05,19,2.7399999999999998
+278,New Jersey,North NJ,Burger King,0,1,open,9,12,2,4.25,17,2.96
+278,New Jersey,North NJ,Burger King,0,2,open,4,34,3,5.05,17,2.95
+279,New Jersey,North NJ,Burger King,0,1,open,10,8.5,4,4.25,17.5,3.12
+279,New Jersey,North NJ,Burger King,0,2,open,12,13.5,3,5.05,17.5,3.09
+280,New Jersey,North NJ,KFC,1,1,open,8,10,4,4.75,12,4.25
+280,New Jersey,North NJ,KFC,1,2,open,8.5,6,2,5.2,12,4.21
+281,New Jersey,North NJ,Roy Rogers,1,1,open,12,32,4,4.62,17,2.98
+281,New Jersey,North NJ,Roy Rogers,1,2,open,5,32,3,5.05,14,3.17
+282,New Jersey,North NJ,Roy Rogers,1,1,open,4,36,4,4.25,18,3.0700000000000003
+282,New Jersey,North NJ,Roy Rogers,1,2,open,6,37,4,5.05,16,3.2199999999999998
+283,New Jersey,North NJ,Wendy's,1,1,open,0,19,2,4.5,11.5,2.96
+283,New Jersey,North NJ,Wendy's,1,2,open,0,14,3,5.05,11,
+284,New Jersey,South NJ,Burger King,0,1,open,3,28,4,4.5,15,2.92
+284,New Jersey,South NJ,Burger King,0,2,open,2,35,4,5.05,15,
+285,New Jersey,South NJ,Burger King,0,1,open,11,17.5,3,4.5,16,2.78
+285,New Jersey,South NJ,Burger King,0,2,open,20,15,3,5.05,16,2.88
+286,New Jersey,South NJ,Burger King,1,1,open,4.5,20,4,4.55,17.5,2.8200000000000003
+286,New Jersey,South NJ,Burger King,1,2,open,12,17.5,4,5.05,17.5,2.9299999999999997
+287,New Jersey,South NJ,Burger King,0,1,open,2,30,3,4.62,16,2.8200000000000003
+287,New Jersey,South NJ,Burger King,0,2,open,0,35,5,5.05,16.25,2.93
+288,New Jersey,South NJ,Burger King,0,1,open,10,10,3,4.5,16,2.8600000000000003
+288,New Jersey,South NJ,Burger King,0,2,open,20,10,3,5.05,16,2.7
+289,New Jersey,South NJ,KFC,0,1,open,2,11,3,4.25,10.5,4.779999999999999
+289,New Jersey,South NJ,KFC,0,2,open,2,18,3,5.05,10.5,4.74
+290,New Jersey,South NJ,KFC,1,1,open,2,13,2,4.25,10,3.88
+290,New Jersey,South NJ,KFC,1,2,open,0,12,3,5.05,10.5,3.9899999999999998
+291,New Jersey,South NJ,KFC,1,1,open,7,4,2,4.35,10,3.9299999999999997
+291,New Jersey,South NJ,KFC,1,2,open,5,3,3,5.05,11,3.87
+292,New Jersey,South NJ,KFC,1,1,open,3,9,3,4.25,10,3.9899999999999998
+292,New Jersey,South NJ,KFC,1,2,open,9,9,2,5.05,10.5,4.199999999999999
+293,New Jersey,South NJ,KFC,0,1,open,3,15,2,4.25,10,4.779999999999999
+293,New Jersey,South NJ,KFC,0,2,open,3,12,3,5.05,10,4.74
+294,New Jersey,South NJ,KFC,0,1,open,1,28,3,4.6,11,4.53
+294,New Jersey,South NJ,KFC,0,2,open,1,15,3,5.05,11,4.52
+295,New Jersey,South NJ,Roy Rogers,1,1,open,2,24,3,4.25,12.5,3.0300000000000002
+295,New Jersey,South NJ,Roy Rogers,1,2,open,2,15,3,5.05,11.5,2.91
+296,New Jersey,South NJ,Roy Rogers,1,1,open,3,18,3,4.75,16,
+296,New Jersey,South NJ,Roy Rogers,1,2,open,3,20,3,5.05,15,2.96
+297,New Jersey,South NJ,Roy Rogers,1,1,open,3,27,3,4.75,17,2.8800000000000003
+297,New Jersey,South NJ,Roy Rogers,1,2,open,12,25,4,5.05,17,2.96
+298,New Jersey,South NJ,Wendy's,0,1,open,0,22,2,4.25,11.5,2.61
+298,New Jersey,South NJ,Wendy's,0,2,open,0,26,2,5.3,10.5,2.79
+299,New Jersey,South NJ,Wendy's,0,1,open,3,28.5,3,4.5,12.5,2.76
+299,New Jersey,South NJ,Wendy's,0,2,open,11,19,3,5.05,12.5,2.73
+300,New Jersey,North NJ,Burger King,0,1,open,3,40,3,4.5,13.5,2.96
+300,New Jersey,North NJ,Burger King,0,2,open,22,11,3,5.5,13.5,2.8899999999999997
+301,New Jersey,North NJ,Burger King,0,1,open,0,25,3,4.25,17,2.92
+301,New Jersey,North NJ,Burger King,0,2,open,15,17,3,5.05,17,2.9299999999999997
+302,New Jersey,North NJ,Burger King,0,1,open,18,6,3,4.75,16,2.96
+302,New Jersey,North NJ,Burger King,0,2,open,18,10,4,5.05,15,2.95
+303,New Jersey,North NJ,Burger King,0,1,open,19,7,3,4.65,16,3.0700000000000003
+303,New Jersey,North NJ,Burger King,0,2,open,15,7,3,5.05,16,2.9299999999999997
+304,New Jersey,North NJ,Burger King,0,1,open,5,17,1,4.25,16,3.01
+304,New Jersey,North NJ,Burger King,0,2,open,,28,3,5.05,15,3.25
+305,New Jersey,North NJ,Burger King,0,1,open,12,11,4,4.25,16,3.0700000000000003
+305,New Jersey,North NJ,Burger King,0,2,open,9,17,4,5.05,15.5,2.88
+306,New Jersey,North NJ,KFC,1,1,open,0,22,3,4.75,12,4.42
+306,New Jersey,North NJ,KFC,1,2,open,25,15,5,5.05,12,4.42
+307,New Jersey,North NJ,KFC,0,1,open,15,4,3,4.25,13.5,4.74
+307,New Jersey,North NJ,KFC,0,2,open,0,19,2,5.05,12.5,4.21
+308,New Jersey,North NJ,Roy Rogers,1,1,open,7,25,3,4.5,16.5,2.83
+308,New Jersey,North NJ,Roy Rogers,1,2,open,7,22,3,5.05,15.5,3.2199999999999998
+309,New Jersey,North NJ,Roy Rogers,1,1,open,12,30,3,4.25,18,3.31
+309,New Jersey,North NJ,Roy Rogers,1,2,open,16,12,6,5.05,17,3.2800000000000002
+310,New Jersey,North NJ,Wendy's,0,1,open,0,40,4,4.5,15.5,3.1700000000000004
+310,New Jersey,North NJ,Wendy's,0,2,open,0,40,4,5.05,15.5,4.27
+311,New Jersey,North NJ,Wendy's,0,1,open,8,16,6,4.75,16,2.97
+311,New Jersey,North NJ,Wendy's,0,2,open,10,14,6,5.05,16,4.35
+312,New Jersey,South NJ,Burger King,0,1,open,6,6,4,4.37,15,3.1399999999999997
+312,New Jersey,South NJ,Burger King,0,2,open,10,12,3,5.05,15,2.96
+313,New Jersey,South NJ,KFC,1,1,open,1,4,2,4.5,10,
+313,New Jersey,South NJ,KFC,1,2,open,2,4,3,5.05,10,4.3
+314,New Jersey,South NJ,Roy Rogers,1,1,open,7,7,3,4.87,13,4.59
+314,New Jersey,South NJ,Roy Rogers,1,2,open,4,8,6,5.05,16,4.619999999999999
+315,New Jersey,South NJ,Burger King,0,1,open,20,10,3,4.25,16,2.81
+315,New Jersey,South NJ,Burger King,0,2,closed temporarily,,,,,,
+316,New Jersey,South NJ,Burger King,0,1,open,4,22,3,4.25,16,2.88
+316,New Jersey,South NJ,Burger King,0,2,open,20,18,3,5.05,18,2.86
+317,New Jersey,South NJ,Burger King,1,1,open,10,20,4,4.25,16,2.87
+317,New Jersey,South NJ,Burger King,1,2,open,4,26,5,5.05,16,2.9600000000000004
+318,New Jersey,South NJ,Burger King,0,1,open,7,13,3,4.25,16.5,3.07
+318,New Jersey,South NJ,Burger King,0,2,open,0,22.5,3,5.05,17.5,2.97
+319,New Jersey,South NJ,Burger King,0,1,open,0,10,2,4.25,15,2.81
+319,New Jersey,South NJ,Burger King,0,2,open,0,23,5,5.05,16,3.1
+320,New Jersey,South NJ,Burger King,0,1,open,0,20,1,4.25,16,2.84
+320,New Jersey,South NJ,Burger King,0,2,closed permanently,0,0,0,,,
+321,New Jersey,South NJ,Burger King,0,1,open,6.5,20,3,4.25,16,2.5
+321,New Jersey,South NJ,Burger King,0,2,open,30,25,5,5.05,16,2.8400000000000003
+322,New Jersey,South NJ,KFC,1,1,open,2,10,3,4.45,10,3.1399999999999997
+322,New Jersey,South NJ,KFC,1,2,open,10,3,4,5.05,11,3.9899999999999998
+323,New Jersey,South NJ,KFC,1,1,open,2,14,4,4.62,10,4.029999999999999
+323,New Jersey,South NJ,KFC,1,2,open,2,11,3,5.05,10,4.01
+324,New Jersey,South NJ,KFC,1,1,open,4,4,4,4.25,11,4.08
+324,New Jersey,South NJ,KFC,1,2,open,1,8,2,5.05,10.5,3.9899999999999998
+325,New Jersey,South NJ,KFC,1,1,open,2,15,3,4.25,10,4.14
+325,New Jersey,South NJ,KFC,1,2,open,1,14,3,5.05,10,3.9899999999999998
+326,New Jersey,South NJ,KFC,1,1,open,3,4,3,4.25,10,3.88
+326,New Jersey,South NJ,KFC,1,2,open,0,9,4,5.05,11,4
+327,New Jersey,South NJ,Roy Rogers,1,1,open,2,14,3,4.25,16,2.7600000000000002
+327,New Jersey,South NJ,Roy Rogers,1,2,closed permanently,0,0,0,,,
+328,New Jersey,South NJ,Roy Rogers,1,1,open,5,23,4,4.5,16,2.8400000000000003
+328,New Jersey,South NJ,Roy Rogers,1,2,open,6,12,3,5.05,16,2.96
+329,New Jersey,South NJ,Roy Rogers,1,1,open,3,25,3,4.75,16,2.7300000000000004
+329,New Jersey,South NJ,Roy Rogers,1,2,open,3,15,3,5.05,16,3.0300000000000002
+330,New Jersey,South NJ,Roy Rogers,1,1,open,1,15,3,4.75,11.5,
+330,New Jersey,South NJ,Roy Rogers,1,2,open,2,15,3,5.05,11.5,2.97
+331,New Jersey,South NJ,Roy Rogers,1,1,open,3,18,3,4.5,16,2.92
+331,New Jersey,South NJ,Roy Rogers,1,2,open,2,15,3,5.05,16,2.96
+332,New Jersey,South NJ,Roy Rogers,1,1,open,0,20,3,4.75,16,2.92
+332,New Jersey,South NJ,Roy Rogers,1,2,open,5,9,3,5.05,16,2.91
+333,New Jersey,South NJ,Roy Rogers,1,1,open,2,12,2,4.25,16,2.92
+333,New Jersey,South NJ,Roy Rogers,1,2,open,3,10,2,5.05,15,4.02
+334,New Jersey,South NJ,Wendy's,0,1,open,8,12,3,4.75,12.5,2.79
+334,New Jersey,South NJ,Wendy's,0,2,open,0,23,2,5.05,11.5,2.79
+335,New Jersey,South NJ,Wendy's,0,1,open,4,20,3,4.55,11.5,2.76
+335,New Jersey,South NJ,Wendy's,0,2,open,5,16,3,5.1,11.5,2.79
+336,New Jersey,South NJ,Wendy's,0,1,open,10,15,3,4.8,16,2.8200000000000003
+336,New Jersey,South NJ,Wendy's,0,2,open,15,11,3,5.05,16,4.529999999999999
+337,New Jersey,North NJ,Burger King,0,1,open,8,9,3,4.75,16.5,2.96
+337,New Jersey,North NJ,Burger King,0,2,open,,21,4,5.05,18,2.9299999999999997
+338,New Jersey,North NJ,Burger King,1,1,open,9,15,3,4.25,16,2.95
+338,New Jersey,North NJ,Burger King,1,2,open,15,30,4,5.05,16,2.9699999999999998
+339,New Jersey,North NJ,Roy Rogers,1,1,open,10,35,3,4.35,17,3.14
+339,New Jersey,North NJ,Roy Rogers,1,2,open,12,35,3,5.05,16,3.1500000000000004
+340,New Jersey,North NJ,Roy Rogers,0,1,open,10,20,3,4.5,17,4.78
+340,New Jersey,North NJ,Roy Rogers,0,2,open,10,15,4,5.05,24,3.74
+341,New Jersey,North NJ,Roy Rogers,1,1,open,0,20,3,4.39,17,3.6
+341,New Jersey,North NJ,Roy Rogers,1,2,open,5,22,4,5.05,18,3.7300000000000004
+342,New Jersey,North NJ,Roy Rogers,1,1,open,17.5,17.5,4,4.25,18,3.44
+342,New Jersey,North NJ,Roy Rogers,1,2,open,25,25,6,5.2,24,
+343,New Jersey,North NJ,Wendy's,0,1,open,0,28,4,4.25,11.5,3.76
+343,New Jersey,North NJ,Wendy's,0,2,open,3,23,3,5.05,11.5,3.93
+344,New Jersey,South NJ,Burger King,0,1,open,4,6,3,4.25,11,3.2100000000000004
+344,New Jersey,South NJ,Burger King,0,2,open,3,2,3,5.05,10,3.33
+345,New Jersey,South NJ,Burger King,0,1,open,11,9,4,4.5,15,2.93
+345,New Jersey,South NJ,Burger King,0,2,open,0,30,,5.05,15,2.9
+346,New Jersey,South NJ,Burger King,0,1,open,8,12,3,4.62,15,2.92
+346,New Jersey,South NJ,Burger King,0,2,open,15,6,4,5.25,16,2.73
+347,New Jersey,South NJ,Burger King,1,1,open,15,15,3,4.62,16,2.85
+347,New Jersey,South NJ,Burger King,1,2,open,12,14,3,5.05,16,2.9299999999999997
+348,New Jersey,South NJ,Burger King,0,1,open,0,8,2,4.25,12,3.11
+348,New Jersey,South NJ,Burger King,0,2,open,4,0,3,5.05,10.5,3.3600000000000003
+349,New Jersey,South NJ,KFC,0,1,open,5,7,3,4.75,12,4.82
+349,New Jersey,South NJ,KFC,0,2,open,7,6,4,5.05,11.5,4.65
+350,New Jersey,South NJ,KFC,0,1,open,0,11,3,4.62,12.5,5.86
+350,New Jersey,South NJ,KFC,0,2,open,22,4,3,5.05,11.5,4.28
+351,New Jersey,South NJ,Roy Rogers,1,1,open,8,13,4,4.75,16,3.14
+351,New Jersey,South NJ,Roy Rogers,1,2,open,12,5,4,5.05,15,2.91
+352,New Jersey,South NJ,Roy Rogers,1,1,open,4,15,4,4.5,15,2.9400000000000004
+352,New Jersey,South NJ,Roy Rogers,1,2,open,1,15,3,5.05,15,3.04
+353,New Jersey,Central NJ,Burger King,0,1,open,2,16.5,4,4.25,15,2.7199999999999998
+353,New Jersey,Central NJ,Burger King,0,2,open,3,20,3,5.05,15,2.7800000000000002
+354,New Jersey,South NJ,Burger King,0,1,open,28,12,4,4.5,15,2.8600000000000003
+354,New Jersey,South NJ,Burger King,0,2,open,10,20,5,5.05,16,2.94
+355,New Jersey,South NJ,Burger King,1,1,open,5,29.5,5,4.87,17,2.9200000000000004
+355,New Jersey,South NJ,Burger King,1,2,open,25,5,3,5.05,17,
+356,New Jersey,South NJ,Burger King,1,1,open,18,6,2,4.25,16,2.8600000000000003
+356,New Jersey,South NJ,Burger King,1,2,open,5,9,2,5.05,16,2.8499999999999996
+357,New Jersey,South NJ,Burger King,0,1,open,6,30,3,4.25,14.5,2.76
+357,New Jersey,South NJ,Burger King,0,2,open,15,17,2,5.05,16,2.73
+358,New Jersey,South NJ,KFC,1,1,open,2,7,2,4.62,9.5,4.029999999999999
+358,New Jersey,South NJ,KFC,1,2,open,3,7,3,5.05,11,4.06
+359,New Jersey,South NJ,KFC,1,1,open,10,6,2,4.75,10.5,4.029999999999999
+359,New Jersey,South NJ,KFC,1,2,open,4,11,2,5.05,12,4.119999999999999
+360,New Jersey,South NJ,KFC,1,1,open,2,10.5,2,4.25,10,
+360,New Jersey,South NJ,KFC,1,2,open,3,12,3,,11,
+361,New Jersey,Central NJ,Roy Rogers,1,1,open,3,10.5,3,4.25,10.5,3.0300000000000002
+361,New Jersey,Central NJ,Roy Rogers,1,2,closed permanently,0,0,0,,,
+362,New Jersey,South NJ,Roy Rogers,1,1,open,8,9,4,4.75,16,3.0900000000000003
+362,New Jersey,South NJ,Roy Rogers,1,2,open,5,20,2,5.05,17,2.91
+363,New Jersey,South NJ,Roy Rogers,1,1,open,2,27.5,3,4.25,16,2.87
+363,New Jersey,South NJ,Roy Rogers,1,2,open,10,20,4,5.05,16,2.75
+364,New Jersey,North NJ,Roy Rogers,1,1,open,0,19,4,4.75,11.5,3.0200000000000005
+364,New Jersey,North NJ,Roy Rogers,1,2,closed temporarily,,,,,,2.79
+365,New Jersey,South NJ,Roy Rogers,1,1,open,7.5,22.5,3,4.37,16,2.87
+365,New Jersey,South NJ,Roy Rogers,1,2,open,,31,4,5.05,16,2.91
+366,New Jersey,Central NJ,Wendy's,0,1,open,2,17,3,4.87,11.5,2.8200000000000003
+366,New Jersey,Central NJ,Wendy's,0,2,open,3,17,2,,11.5,2.74
+367,New Jersey,South NJ,Burger King,1,1,open,0,22,4,4.25,15,2.69
+367,New Jersey,South NJ,Burger King,1,2,open,0,26,4,5.05,16,2.7399999999999998
+368,New Jersey,South NJ,Burger King,0,1,open,3,25,2,4.25,15,2.79
+368,New Jersey,South NJ,Burger King,0,2,open,5,32,7,5.05,16,2.7399999999999998
+369,New Jersey,South NJ,Burger King,0,1,open,6,13,5,4.25,16,2.7800000000000002
+369,New Jersey,South NJ,Burger King,0,2,open,4,23,6,5.05,16,2.75
+370,New Jersey,South NJ,KFC,0,1,open,6,13,,4.25,12.5,4.32
+370,New Jersey,South NJ,KFC,0,2,open,24,4,4,5.05,12.5,4.32
+371,New Jersey,South NJ,KFC,0,1,open,0,25,3,4.25,12.5,4.3100000000000005
+371,New Jersey,South NJ,KFC,0,2,open,14,7,2,5.2,12.5,4.24
+372,New Jersey,South NJ,KFC,0,1,open,3.5,20,3,4.25,12,4.25
+372,New Jersey,South NJ,KFC,0,2,open,1,30,4,5.05,12.5,4.32
+373,New Jersey,South NJ,Roy Rogers,0,1,open,2,17,3,4.5,11.5,2.56
+373,New Jersey,South NJ,Roy Rogers,0,2,open,1,19,4,5.05,11.5,2.54
+374,New Jersey,South NJ,Wendy's,0,1,open,0,20,3,4.25,12.5,2.7
+374,New Jersey,South NJ,Wendy's,0,2,open,0,25,2,5.05,11.5,2.8
+375,New Jersey,North NJ,Burger King,1,1,open,0,15,4,4.35,15,3.4
+375,New Jersey,North NJ,Burger King,1,2,closed permanently,0,0,0,,,
+376,New Jersey,North NJ,Burger King,0,1,open,20,11.5,3.3,4.85,16,2.96
+376,New Jersey,North NJ,Burger King,0,2,open,26,5,3,5.05,16,
+377,New Jersey,North NJ,Burger King,0,1,open,4,10,4,4.5,14,2.86
+377,New Jersey,North NJ,Burger King,0,2,open,0,17,3,5.05,14,3.27
+378,New Jersey,North NJ,Burger King,0,1,open,12,6,3,4.25,14,2.96
+378,New Jersey,North NJ,Burger King,0,2,open,11,12,3,5.05,14,2.94
+379,New Jersey,North NJ,Burger King,0,1,open,20,12,4,4.62,16,3.0700000000000003
+379,New Jersey,North NJ,Burger King,0,2,open,28,6,3,5.05,16,3.18
+380,New Jersey,North NJ,Burger King,0,1,open,10,15,3,4.5,16,2.96
+380,New Jersey,North NJ,Burger King,0,2,open,15,14,3,5.05,16,2.9299999999999997
+381,New Jersey,North NJ,Burger King,0,1,open,6,4,2,4.5,16,3.05
+381,New Jersey,North NJ,Burger King,0,2,open,7,2,2,5.05,16,3.2199999999999998
+382,New Jersey,North NJ,Burger King,0,1,open,,,3,4.65,16,2.96
+382,New Jersey,North NJ,Burger King,0,2,open,0,30,3,5.05,16,2.99
+383,New Jersey,North NJ,Burger King,0,1,open,16,14,3,4.25,17,
+383,New Jersey,North NJ,Burger King,0,2,open,15,14,3,5.05,17,2.79
+384,New Jersey,North NJ,Burger King,0,1,open,0,19,3,4.25,17,2.96
+384,New Jersey,North NJ,Burger King,0,2,open,14,10,4,5.05,17,2.95
+385,New Jersey,North NJ,KFC,0,1,open,15,5,2,4.25,10,4.78
+385,New Jersey,North NJ,KFC,0,2,open,12,7,2,5.05,10,4.74
+386,New Jersey,North NJ,KFC,1,1,open,4,10,3,4.62,11,5.21
+386,New Jersey,North NJ,KFC,1,2,open,18,4,3,5.25,11,5.17
+387,New Jersey,North NJ,Roy Rogers,1,1,open,24,16,4,4.87,17,4.47
+387,New Jersey,North NJ,Roy Rogers,1,2,open,8,30,3,5.4,16,3.21
+388,New Jersey,North NJ,Roy Rogers,1,1,open,4,28,3,4.25,17,3.2
+388,New Jersey,North NJ,Roy Rogers,1,2,open,6,15,3,5.05,17,4.34
+389,New Jersey,North NJ,Roy Rogers,1,1,open,14,13,4,4.75,17,3.24
+389,New Jersey,North NJ,Roy Rogers,1,2,open,25,15,3,5.05,17,3.2199999999999998
+390,New Jersey,North NJ,Roy Rogers,1,1,open,13,8,3,4.87,17,3.43
+390,New Jersey,North NJ,Roy Rogers,1,2,open,18,18,4,5.05,16,3.3899999999999997
+391,New Jersey,North NJ,Roy Rogers,1,1,open,16,15,3,4.5,17,3.32
+391,New Jersey,North NJ,Roy Rogers,1,2,open,8,24,3,5.05,16,3.2299999999999995
+392,New Jersey,North NJ,Roy Rogers,0,1,open,8,6,4,4.25,16,3.16
+392,New Jersey,North NJ,Roy Rogers,0,2,open,5,27,4,5.05,16,3.2199999999999998
+393,New Jersey,North NJ,Roy Rogers,1,1,open,11,10,3,4.75,16,3.2
+393,New Jersey,North NJ,Roy Rogers,1,2,open,17,5,2,5.05,15,3.21
+394,New Jersey,North NJ,Roy Rogers,1,1,open,6,17,3,4.32,17,3.2
+394,New Jersey,North NJ,Roy Rogers,1,2,open,1.5,15,3,5.05,16,3.1799999999999997
+395,New Jersey,North NJ,Burger King,0,1,open,0,35,3,4.25,16,3.18
+395,New Jersey,North NJ,Burger King,0,2,open,0,35,3,5.05,16,3.1799999999999997
+396,New Jersey,North NJ,Burger King,0,1,open,0,36,3,4.5,16,3.2699999999999996
+396,New Jersey,North NJ,Burger King,0,2,open,4,36,3,5.05,16,3.17
+397,New Jersey,Central NJ,KFC,0,1,open,0,17,2,4.5,11,4.42
+397,New Jersey,Central NJ,KFC,0,2,open,0,13,2,5.05,11,4.84
+398,New Jersey,North NJ,Burger King,0,1,open,0,36,5,4.25,17,3.2
+398,New Jersey,North NJ,Burger King,0,2,open,0,20,3,5.05,17,3.17
+399,New Jersey,North NJ,Burger King,0,1,open,0,36,5,4.25,16,3.12
+399,New Jersey,North NJ,Burger King,0,2,open,13,9,4,5.05,16,3.2299999999999995
+400,New Jersey,North NJ,Burger King,0,1,open,8,32,5,4.25,16,2.95
+400,New Jersey,North NJ,Burger King,0,2,open,0,38,4,5.05,16,2.99
+401,New Jersey,North NJ,Burger King,1,1,open,4,28,3,4.25,16,3.06
+401,New Jersey,North NJ,Burger King,1,2,open,13,17,4,5.05,16,3.2
+402,New Jersey,North NJ,Burger King,0,1,open,30,15,4,4.25,15,2.5500000000000003
+402,New Jersey,North NJ,Burger King,0,2,open,0,35,4,5.05,16,2.52
+403,New Jersey,North NJ,KFC,1,1,open,3,10,4,4.25,11,4.25
+403,New Jersey,North NJ,KFC,1,2,open,5,5,2,5.05,11,4.42
+404,New Jersey,North NJ,KFC,1,1,open,20,10,8,4.62,13,4.25
+404,New Jersey,North NJ,KFC,1,2,open,25,7,8,5.05,13,4.21
+405,New Jersey,North NJ,KFC,0,1,open,0,7,3,4.75,11,4.25
+405,New Jersey,North NJ,KFC,0,2,open,5,10,6,5.05,11,4.17
+406,New Jersey,North NJ,KFC,1,1,open,2,10,2,4.95,12,4.25
+406,New Jersey,North NJ,KFC,1,2,open,19,3.5,3,5.25,11,4.21
+407,New Jersey,North NJ,KFC,1,1,open,3.5,6.5,3,4.75,11,4.25
+407,New Jersey,North NJ,KFC,1,2,open,12,3,4,5.25,14,4.31
+408,New Jersey,North NJ,Roy Rogers,1,1,open,3,33,5,4.25,19,3.2600000000000002
+408,New Jersey,North NJ,Roy Rogers,1,2,open,5,25,3,5.05,18,3.21
+409,New Jersey,North NJ,Wendy's,0,1,open,7,8,3,4.75,12.5,4.07
+409,New Jersey,North NJ,Wendy's,0,2,open,0,35,3,5.05,12.5,4.27
+410,New Jersey,North NJ,Wendy's,0,1,open,0,33,3,4.62,12.5,3.1
+410,New Jersey,North NJ,Wendy's,0,2,open,10,24,3,5.14,12.5,4.05

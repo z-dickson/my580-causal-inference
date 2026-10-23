@@ -12,19 +12,18 @@ format:
 
 # Overview
 
-In April 2020, at the height of the COVID-19 pandemic, Donald Trump tweeted calls to "LIBERATE" three states that were under lockdown: **Michigan, Minnesota and Virginia**. Did these messages reduce compliance with lockdown restrictions?
+On **1 April 1992**, New Jersey raised its minimum wage from \$4.25 to **\$5.05** an hour, one of the highest in the US at the time. Next door, Pennsylvania stayed at the federal minimum of \$4.25. The textbook competitive model predicts that a higher minimum wage **reduces employment**: if labour costs more, firms hire less. Did it?
 
-We can't run an experiment on presidential tweets, so we use a **difference-in-differences (DiD)** design. We compare the *change* in mobility in targeted states with the *change* in mobility in non-targeted states over the same period. Data are county-level Google COVID-19 Community Mobility Reports, 10–23 April 2020.
-
-In Dickson & Hobolt (2024), Republican counties are compared across treated and control states. We'll start with all counties and come back to that in a "Your turn" exercise.
+We can't randomly assign minimum wages to states, so Card & Krueger (1994) used a **difference-in-differences (DiD)** design. They surveyed 410 fast-food restaurants (Burger King, KFC, Roy Rogers and Wendy's) in New Jersey and eastern Pennsylvania **before** the increase (February–March 1992) and **after** it (November–December 1992). We compare the *change* in employment in New Jersey restaurants with the *change* in Pennsylvania restaurants over the same period.
 
 We will:
 
 0. *(Warm-up)* Draw the DAG for this design
 1. Load the data and build the treatment and post-period indicators
-2. Plot pre-treatment trends
-3. Estimate a 2×2 DiD by hand and with regression
-4. Estimate an event study
+2. Check that the treatment actually happened: did wages rise?
+3. Estimate a 2×2 DiD by hand, with regression and with two-way fixed effects
+4. Use variation **within** New Jersey as a second comparison
+5. *(Simulation)* See what an event study adds when we have more time periods
 
 Look for the **✏️ Your turn** prompts.
 
@@ -34,7 +33,7 @@ Look for the **✏️ Your turn** prompts.
 ```{r}
 #| message: false
 # install packages if they are not already installed
-packages_to_install <- c("fixest", "tidyverse", "panelView", "dagitty", "ggdag")
+packages_to_install <- c("fixest", "tidyverse", "dagitty", "ggdag")
 
 for (package_name in packages_to_install) {
   if (!(package_name %in% installed.packages())) {
@@ -44,7 +43,6 @@ for (package_name in packages_to_install) {
 
 library(fixest)    # for fixed effects regression
 library(tidyverse) # for data manipulation
-library(panelView) # for visualizing panel data
 library(dagitty)   # for specifying DAGs
 library(ggdag)     # for plotting DAGs
 ```
@@ -52,130 +50,127 @@ library(ggdag)     # for plotting DAGs
 
 # Warm-up (optional): The DAG
 
-Before touching data, let's write down our assumptions. Targeted states might differ from other states in ways that also affect mobility: for example, partisanship or how strict their lockdowns were. Mobility also changes over time for everyone, e.g. as lockdown fatigue sets in. And *when* the tweets happen is itself a feature of time: treatment only switches on after 17 April.
+Before touching data, let's write down our assumptions. New Jersey and Pennsylvania might differ in ways that also affect fast-food employment: for example, local labour markets, population or consumer demand. Employment also changes over time for everyone, e.g. with the seasons or the 1990–92 recession. And *when* the new minimum applies is itself a feature of time: treatment only switches on after April 1992.
 
 ```{r}
 #| warning: false
 dag <- dagitty('dag {
-  Tweets -> Mobility
-  StateTraits -> Tweets
-  StateTraits -> Mobility
-  Time -> Tweets
-  Time -> Mobility
+  MinWage -> Employment
+  StateTraits -> MinWage
+  StateTraits -> Employment
+  Time -> MinWage
+  Time -> Employment
 }')
 
 ggdag(dag, text = FALSE, use_labels = "name") + theme_dag()
 ```
 
-There are two back-door paths: `Tweets <- StateTraits -> Mobility` and `Tweets <- Time -> Mobility`. `dagitty` can tell us what we need to adjust for to close them:
+There are two back-door paths: `MinWage <- StateTraits -> Employment` and `MinWage <- Time -> Employment`. `dagitty` can tell us what we need to adjust for to close them:
 
 ```{r}
-adjustmentSets(dag, exposure = "Tweets", outcome = "Mobility")
+adjustmentSets(dag, exposure = "MinWage", outcome = "Employment")
 ```
 
-We can't measure every state trait. DiD gets around this by comparing each unit **with itself** over time: anything about a county that is fixed across our two weeks cancels out (county fixed effects close the first path). Comparing with control counties on the same day removes common shocks over time (day fixed effects close the second). What DiD *can't* handle is something that changes differently over time in treated and control states. That is the **parallel trends** assumption.
+We can't measure every state trait. DiD gets around this by comparing each restaurant **with itself** over time: anything about a restaurant that is fixed across our two survey waves cancels out (restaurant fixed effects close the first path). Comparing with Pennsylvania restaurants over the same months removes common shocks over time (wave fixed effects close the second). What DiD *can't* handle is something that changes differently over time in New Jersey and Pennsylvania. That is the **parallel trends** assumption.
 
 
 # Load the data
 
-The data can be read directly from GitHub, or from your local copy if you've cloned the repository.
+The data are the original survey data from [David Card's website](https://davidcard.berkeley.edu/data_sets.html), reshaped so that each row is a **restaurant in a survey wave**. They can be read directly from GitHub, or from your local copy if you've cloned the repository.
 
 ```{r}
 #| message: false
 # load data from GitHub
-# data <- read_csv("https://raw.githubusercontent.com/z-dickson/my580-causal-inference/main/data/google_mobility_data.csv")
+# data <- read_csv("https://raw.githubusercontent.com/z-dickson/my580-causal-inference/main/data/card_krueger_minwage.csv")
 
 # or, load data from local file if you've cloned the repository
-data <- read_csv("../data/google_mobility_data.csv")
+data <- read_csv("../data/card_krueger_minwage.csv")
 
 head(data)
 ```
 
-Each row is a **county on a day**: `r n_distinct(data$county)` counties observed for `r n_distinct(data$date)` days.
+We have `r n_distinct(data$store_id)` restaurants observed in `r n_distinct(data$wave)` waves (`wave = 1` before the increase, `wave = 2` after). The main variables are:
+
+| Variable | Description |
+|:--|:--|
+| `state`, `region` | New Jersey or Pennsylvania, and the area within each state |
+| `chain`, `co_owned` | Restaurant chain, and whether it is owned by the company (vs. a franchisee) |
+| `status` | In wave 2: open, closed (permanently or temporarily), or refused the interview |
+| `emp_ft`, `emp_pt`, `managers` | Number of full-time workers, part-time workers and managers |
+| `starting_wage` | Starting hourly wage (\$) |
+| `price_meal`, `hours_open` | Price of a soda, fries and main dish (\$); hours open per day |
+
+```{r}
+data %>% filter(wave == 1) %>% count(state, region)
+```
 
 
 # Data preparation
 
-## Outcome: aggregate mobility
+## Outcome: full-time equivalent employment
 
-Our outcome is **aggregate mobility**: the sum of the five "out-of-home" Google mobility measures (retail, grocery, parks, transit and workplaces) **minus** residential mobility (time spent at home, which *rises* when people comply). Each measure is the percentage change relative to a pre-pandemic baseline. Higher values mean more movement, i.e. *less* compliance with lockdown.
+Following Card & Krueger, our outcome is **full-time equivalent (FTE) employment**: full-time workers plus managers, plus part-time workers counted as half a worker each.
 
 ::: {.callout-note}
 ## A note on data quality
 
-Google suppresses values when there is too little data, and in this file those appear as **0**. Parks and transit are zero in a large share of rows, while retail and workplaces are never zero. Real research would treat these as missing. Try the DiD with retail + workplaces only and see whether the conclusion changes.
+Employment was reported by restaurant managers over the phone, so it is measured with error. Six restaurants **closed permanently** between the waves. They are recorded with zero employees, so their lost jobs count in the analysis. Restaurants that were **temporarily closed** (renovations, a road closure and a mall fire) have missing values. Try the DiD without the closed restaurants and see whether the conclusion changes.
 :::
 
 ```{r}
 data <- data %>%
-  mutate(aggregate_mobility = retail_and_recreation_mobility + grocery_and_pharmacy_mobility +
-           parks_mobility + transit_mobility + workplaces_mobility - residential_mobility)
+  mutate(fte = emp_ft + 0.5 * emp_pt + managers)
 
-# how often is each measure exactly zero?
-data %>%
-  summarise(across(ends_with("_mobility") & !starts_with("aggregate"), ~ mean(.x == 0)))
+data %>% count(wave, status)
 
-ggplot(data, aes(x = aggregate_mobility)) +
-  geom_histogram(bins = 50) +
-  labs(x = "Aggregate mobility", y = "Count") +
+ggplot(data, aes(x = fte)) +
+  geom_histogram(bins = 40) +
+  labs(x = "FTE employment", y = "Count") +
   theme_minimal()
 ```
 
 ## Treatment and post-period indicators
 
-The **treatment group** is the counties in the three targeted states. The **control group** is the counties in the other 36 states in our data.
+The **treatment group** is the restaurants in New Jersey. The **control group** is the restaurants in Pennsylvania.
 
 ```{r}
-targeted_states <- c("Michigan", "Minnesota", "Virginia")
-
 data <- data %>%
-  mutate(treatment = ifelse(state_name %in% targeted_states, 1, 0))
+  mutate(nj = ifelse(state == "New Jersey", 1, 0))
 
 # check the treatment variable
-data %>% filter(treatment == 1) %>% distinct(state_name)
+data %>% count(state, nj)
 ```
 
-Trump's messages were sent on **17 April 2020**, so the **post** period starts that day.
+The new minimum wage took effect between the two waves, so the **post** period is wave 2.
 
 ```{r}
 data <- data %>%
-  mutate(post = ifelse(date < as.Date("2020-04-17"), 0, 1))
-
-# check: which dates are in the post period?
-data %>% filter(post == 1) %>% distinct(date)
+  mutate(post = ifelse(wave == 2, 1, 0))
 ```
 
-The DiD treatment indicator is 1 only for **treated counties in the post period**:
+The DiD treatment indicator is 1 only for **New Jersey restaurants in the post period**:
+
+```{r}
+data <- data %>%
+  mutate(under_treatment = nj * post)
+
+data %>% count(state, wave, under_treatment)
+```
+
+
+# Did the treatment happen?
+
+Before estimating the effect *of* the minimum wage, check that the law actually changed what restaurants paid. If New Jersey wages hadn't moved, there would be nothing to estimate. The plot below shows the distribution of starting wages in each state, before and after.
 
 ```{r}
 #| warning: false
-#| message: false
-data <- data %>%
-  mutate(under_treatment = treatment * post)
-
-# visualize treatment status over time for every county
-panelview(aggregate_mobility ~ under_treatment,
-          data = data, index = c("county", "date"),
-          xlab = "Date", ylab = "County", pre.post = TRUE)
-```
-
-
-# Visualize the trends
-
-The key DiD assumption is **parallel trends**: *without* the tweets, mobility in treated and control counties would have moved in parallel. We can never check this for the post period, since that's the counterfactual. But we can check whether trends were parallel *before* treatment.
-
-```{r}
-#| message: false
 data %>%
-  mutate(group = ifelse(treatment == 1, "Targeted states", "Other states")) %>%
-  group_by(group, date) %>%
-  summarise(mobility = mean(aggregate_mobility, na.rm = TRUE)) %>%
-  ggplot(aes(x = date, y = mobility, colour = group)) +
-  geom_line(linewidth = 1) +
-  geom_point() +
-  geom_vline(xintercept = as.Date("2020-04-17"), linetype = "dashed") +
-  annotate("text", x = as.Date("2020-04-17"), y = Inf, label = "Tweets", vjust = 1.5, hjust = -0.1) +
-  labs(x = NULL, y = "Mean aggregate mobility", colour = NULL) +
+  mutate(wave = ifelse(wave == 1, "Feb–Mar 1992 (before)", "Nov–Dec 1992 (after)")) %>%
+  ggplot(aes(x = starting_wage, fill = state)) +
+  geom_histogram(binwidth = 0.1, position = "dodge", boundary = 4.2) +
+  geom_vline(xintercept = c(4.25, 5.05), linetype = "dashed") +
+  facet_wrap(~ wave, ncol = 1) +
+  labs(x = "Starting wage ($/hour)", y = "Number of restaurants", fill = NULL) +
   theme_minimal() +
   theme(legend.position = "bottom")
 ```
@@ -183,212 +178,267 @@ data %>%
 ::: {.callout-tip}
 ## ✏️ Your turn
 
-Look at the pre-treatment period (before the dashed line). Do the trends look parallel? Note that the *levels* don't need to be the same. Only the *trends* need to match.
+1. Describe what happened to starting wages in New Jersey. What happened in Pennsylvania?
+2. Estimate a DiD with `starting_wage` as the outcome (copy the regression in the next section and change the outcome). How much did the law raise wages?
+3. Before the increase, some New Jersey restaurants already paid more than \$5.05. Should the law have affected them? We'll come back to this.
 :::
 
 
 # The 2×2 difference-in-differences
+
+## Visualizing the comparison
+
+With only two time periods, the whole design fits in one plot. The dashed line is the **counterfactual**: where New Jersey would have ended up if it had followed Pennsylvania's trend.
+
+```{r}
+#| message: false
+means <- data %>%
+  group_by(state, nj, post) %>%
+  summarise(fte = mean(fte, na.rm = TRUE))
+
+nj_counterfactual <- tibble(
+  post = c(0, 1),
+  fte = c(means$fte[means$nj == 1 & means$post == 0],
+          means$fte[means$nj == 1 & means$post == 0] +
+            means$fte[means$nj == 0 & means$post == 1] - means$fte[means$nj == 0 & means$post == 0]))
+
+ggplot(means, aes(x = post, y = fte, colour = state)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 3) +
+  geom_line(data = nj_counterfactual, aes(x = post, y = fte), inherit.aes = FALSE,
+            linetype = "dashed", colour = "grey50") +
+  scale_x_continuous(breaks = c(0, 1), labels = c("Before (Feb 1992)", "After (Nov 1992)"),
+                     expand = expansion(mult = 0.15)) +
+  labs(x = NULL, y = "Mean FTE employment", colour = NULL) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+::: {.callout-tip}
+## ✏️ Your turn
+
+In Lab 1 and in the lecture we checked parallel trends by looking at the **pre-treatment** period. Can we do that here? What would we need?
+:::
 
 ## By hand
 
 The simplest DiD uses four averages:
 
 ```{r}
-#| message: false
-means <- data %>%
-  group_by(treatment, post) %>%
-  summarise(mobility = mean(aggregate_mobility, na.rm = TRUE))
-
 means
 ```
 
 ```{r}
-treated_change <- means$mobility[means$treatment == 1 & means$post == 1] -
-                  means$mobility[means$treatment == 1 & means$post == 0]
-control_change <- means$mobility[means$treatment == 0 & means$post == 1] -
-                  means$mobility[means$treatment == 0 & means$post == 0]
+treated_change <- means$fte[means$nj == 1 & means$post == 1] -
+                  means$fte[means$nj == 1 & means$post == 0]
+control_change <- means$fte[means$nj == 0 & means$post == 1] -
+                  means$fte[means$nj == 0 & means$post == 0]
 
 c(treated_change = treated_change, control_change = control_change,
   did = treated_change - control_change)
 ```
 
-The control group's change is our estimate of what *would have happened* to the treated group without the tweets. The DiD is the treated group's change **minus** that counterfactual change.
+The control group's change is our estimate of what *would have happened* to New Jersey without the new minimum wage. The DiD is New Jersey's change **minus** that counterfactual change.
 
 ## With regression
 
 The same estimate comes from a regression with an interaction:
 
-$$Y_{it} = \beta_0 + \beta_1 \text{treated}_i + \beta_2 \text{post}_t + \delta (\text{treated}_i \times \text{post}_t) + \varepsilon_{it}$$
+$$Y_{it} = \beta_0 + \beta_1 \text{NJ}_i + \beta_2 \text{post}_t + \delta (\text{NJ}_i \times \text{post}_t) + \varepsilon_{it}$$
 
-- $\beta_1$: the pre-period difference between treated and control counties
-- $\beta_2$: the change over time in control counties
+- $\beta_1$: the pre-period difference between New Jersey and Pennsylvania restaurants
+- $\beta_2$: the change over time in Pennsylvania restaurants
 - $\delta$: the **difference in differences**, our estimate of the ATT
 
 ```{r}
-did_simple <- feols(aggregate_mobility ~ treatment * post, data = data, vcov = ~ state_name)
+did_simple <- feols(fte ~ nj * post, data = data, vcov = ~ store_id)
 etable(did_simple)
 ```
 
-The coefficient on `treatment x post` matches our hand calculation.
+The coefficient on `nj x post` matches our hand calculation. We cluster standard errors by **restaurant**, because each restaurant appears twice.
 
 ## With two-way fixed effects
 
-In practice, DiD is usually estimated with **county fixed effects** ($\alpha_i$) and **day fixed effects** ($\lambda_t$):
+In practice, DiD is usually estimated with **restaurant fixed effects** ($\alpha_i$) and **wave fixed effects** ($\lambda_t$):
 
 $$Y_{it} = \alpha_i + \lambda_t + \delta \, D_{it} + \varepsilon_{it}$$
 
-where $D_{it} = \text{treated}_i \times \text{post}_t$ (our `under_treatment` variable).
+where $D_{it} = \text{NJ}_i \times \text{post}_t$ (our `under_treatment` variable).
 
-- $\alpha_i$ absorbs everything fixed about a county (it replaces $\beta_1$)
-- $\lambda_t$ absorbs everything that affects all counties on a given day (it replaces $\beta_2$)
+- $\alpha_i$ absorbs everything fixed about a restaurant (it replaces $\beta_1$)
+- $\lambda_t$ absorbs everything that affects all restaurants in a given wave (it replaces $\beta_2$)
 
-In `fixest`, fixed effects go after the `|`. We **cluster standard errors by state**, because treatment is assigned at the state level and counties in the same state share shocks (more on this below).
+In `fixest`, fixed effects go after the `|`.
 
 ```{r}
-did_twfe <- feols(aggregate_mobility ~ under_treatment | county + date, data = data, vcov = ~ state_name)
+did_twfe <- feols(fte ~ under_treatment | store_id + wave, data = data, vcov = ~ store_id)
 etable(did_simple, did_twfe)
 ```
 
-## Inference: how many treated units do we really have?
+The estimate barely moves, but notice the number of observations. Restaurant fixed effects can only use restaurants observed in **both** waves, so the TWFE model compares each restaurant with itself.
 
-We have over 1,000 counties, but treatment was decided for only **three states**. Counties in the same state share the same governor, the same lockdown rules and the same news, so they aren't independent pieces of evidence. Compare the standard errors when we cluster by county vs. by state:
+## Adding controls
 
-```{r}
-etable(did_twfe, vcov = list(~ county, ~ state_name),
-       headers = c("Clustered by county", "Clustered by state"))
-```
-
-The estimate is the same, but the standard error is about four times larger once we account for the fact that treatment varies at the state level. **Cluster at the level at which treatment is assigned.**
-
-With only three treated clusters, even state-clustered standard errors are unreliable. A more transparent check borrows the logic of Lab 1: **randomization inference**. Pretend a random set of three *other* states had been targeted, re-estimate, and repeat many times. If the tweets had no effect, how unusual would our real estimate be?
+Card & Krueger also controlled for the restaurant's chain and ownership. With two periods, TWFE is the same as regressing each restaurant's **change** in employment on treatment. That makes it easy to add controls, which then adjust for **different trends** by chain or ownership.
 
 ```{r}
-states <- unique(data$state_name)
-actual <- coef(did_twfe)[["under_treatment"]]
+changes <- data %>%
+  select(store_id, state, region, chain, co_owned, nj, wave, fte, starting_wage) %>%
+  pivot_wider(names_from = wave, values_from = c(fte, starting_wage)) %>%
+  mutate(change_fte = fte_2 - fte_1)
 
-set.seed(580)
-placebo <- map_dbl(1:500, function(s) {
-  fake_states <- sample(states, 3)
-  d <- data %>% mutate(fake_treatment = (state_name %in% fake_states) * post)
-  coef(feols(aggregate_mobility ~ fake_treatment | county + date, data = d))[["fake_treatment"]]
-})
-
-# share of placebo estimates at least as large (in absolute value) as the real one
-mean(abs(placebo) >= abs(actual))
+did_fd <- feols(change_fte ~ nj, data = changes, vcov = "hetero")
+did_fd_controls <- feols(change_fte ~ nj + chain + co_owned, data = changes, vcov = "hetero")
+etable(did_twfe, did_fd, did_fd_controls)
 ```
-
-```{r}
-ggplot(tibble(placebo), aes(x = placebo)) +
-  geom_histogram(bins = 40, fill = "grey60") +
-  geom_vline(xintercept = actual, colour = "red", linewidth = 1) +
-  labs(x = "Placebo DiD estimate (3 random states 'treated')", y = "Count",
-       title = "Our estimate (red) against 500 placebo assignments") +
-  theme_minimal()
-```
-
-
-# Interpretation
-
-The coefficient on `under_treatment` is the estimated **average treatment effect on the treated (ATT)**: the average change in mobility in targeted states after the tweets, relative to what we'd expect from the change in non-targeted states. This holds *if* the parallel trends assumption holds.
-
-The outcome is a sum of percentage changes from baseline, so the estimate is measured in percentage points of that sum. A positive estimate means mobility **rose** in targeted states relative to control states after the tweets, i.e. compliance with lockdown **fell**. The estimate is the *average* effect over the week after the tweets.
 
 ::: {.callout-tip}
 ## ✏️ Your turn
 
 1. Write one sentence interpreting the TWFE estimate for a non-technical audience.
-2. Is the estimate statistically distinguishable from zero once we cluster by state? What does the randomization inference suggest?
-3. Can you think of something *other than the tweets* that changed in Michigan, Minnesota and Virginia, but not in other states, around 17 April? If so, how would it bias the estimate? *(Hint: Michigan's "Operation Gridlock" protest was on 15 April, and all three states have Democratic governors.)*
+2. Is the sign what the textbook model predicts?
+3. Re-run the TWFE model without the restaurants that closed (`filter(!str_detect(status, "closed"))`) or without the restaurants that changed the number of hours they were open. Does the conclusion change?
+4. Try `price_meal` as the outcome. If employers didn't cut jobs, how else might they have paid for higher wages?
 :::
 
 
-# Event study: dynamic effects
+# Inference: how many treated units do we really have?
 
-A single DiD coefficient averages over the whole post period. An **event study** estimates a separate effect for each day relative to a reference day. This shows:
+We have about 400 restaurants, but the minimum wage was set for only **one** treated state, and compared with only **one** control state. Anything else that happened to New Jersey but not Pennsylvania in 1992 (a state budget, a local boom, a bad winter) is perfectly mixed up with the treatment. Restaurants in the same state share these shocks, so they aren't independent pieces of evidence.
 
-- whether the effect grows, fades or stays constant over time, and
-- whether there are "effects" **before** treatment. These would suggest a violation of parallel trends.
+In the lecture the advice was to **cluster at the level at which treatment is assigned**. Here that would be the state, and with two clusters there is no reliable way to do it. Our standard errors assume that the only shocks are restaurant-specific. That is an assumption, not a fact.
 
-First, convert dates to integers:
+One answer is to find **another comparison that doesn't rely on Pennsylvania**.
+
+
+# A second comparison within New Jersey
+
+Not every New Jersey restaurant was equally affected. A restaurant already paying \$5.05 or more didn't have to change anything, while one paying \$4.25 had to raise wages by 19%. If something *else* happened to New Jersey in 1992, it should affect high-wage and low-wage New Jersey restaurants alike. If the minimum wage drives the result, only the low-wage restaurants should change.
 
 ```{r}
-data <- data %>%
-  mutate(date_int = as.integer(as.factor(date)))
+nj_changes <- changes %>%
+  filter(nj == 1, !is.na(starting_wage_1)) %>%
+  mutate(wage_group = case_when(
+    starting_wage_1 == 4.25 ~ "Low ($4.25)",
+    starting_wage_1 >= 5.00 ~ "High ($5.00+)",
+    TRUE ~ "Middle"))
 
-data %>% distinct(date, date_int)
+nj_changes %>%
+  group_by(wage_group) %>%
+  summarise(n = n(),
+            wage_before = mean(starting_wage_1, na.rm = TRUE),
+            wage_after = mean(starting_wage_2, na.rm = TRUE),
+            change_fte = mean(change_fte, na.rm = TRUE))
 ```
 
-The tweets were on 17 April (`date_int = 8`). We use the **last pre-treatment day**, 16 April (`date_int = 7`), as the reference period, so every coefficient is relative to the day before the tweets.
+Compare the low-wage group with the high-wage group: another DiD, with high-wage New Jersey restaurants as the control group.
 
 ```{r}
-event_study <- feols(aggregate_mobility ~ i(date_int, treatment, ref = 7) | county + date_int,
-                     data = data, vcov = ~ state_name)
-
-etable(event_study)
+did_within_nj <- feols(change_fte ~ i(wage_group, ref = "High ($5.00+)"),
+                       data = filter(nj_changes, wage_group != "Middle"), vcov = "hetero")
+etable(did_within_nj)
 ```
 
+Card & Krueger went one step further. They measured each restaurant's **wage gap**: the percentage increase needed to reach the new \$5.05 minimum (zero for Pennsylvania and for high-wage New Jersey restaurants). If the minimum wage reduces employment, restaurants with a bigger gap should lose more jobs.
+
 ```{r}
-iplot(event_study,
-      xlab = "Day (8 = 17 April, day of the tweets)",
-      main = "Effect of 'LIBERATE' tweets on aggregate mobility")
+changes <- changes %>%
+  mutate(wage_gap = case_when(
+    nj == 0 ~ 0,
+    starting_wage_1 >= 5.05 ~ 0,
+    TRUE ~ (5.05 - starting_wage_1) / starting_wage_1))
+
+did_gap <- feols(change_fte ~ wage_gap + chain + co_owned, data = changes, vcov = "hetero")
+etable(did_gap)
 ```
 
 ::: {.callout-tip}
 ## ✏️ Your turn
 
-1. Are the pre-treatment coefficients (days 1–6) close to zero? What does that suggest about parallel trends? *Hint: 11–12 and 18–19 April 2020 were weekends, and 10–12 April was Easter weekend (in the pre-period only). Did weekends and Easter look the same in treated and control states?*
-2. Restrict the sample to Republican-voting counties, as in the paper. Re-run the TWFE model and the event study. Does the estimate change?
-
-```r
-data_rep <- data %>% filter(winning_party == "REPUBLICAN")
-```
-
-3. **Placebo test:** use only the pre-period (`post == 0`) and pretend the treatment happened on 14 April. Do you find an "effect"? What *should* you find?
+1. How did employment change in high-wage New Jersey restaurants? How does that compare with Pennsylvania?
+2. What does this suggest about the worry that something other than the minimum wage happened in New Jersey?
+3. The `wage_gap` coefficient is the effect of a 100% wage increase. What would a 10% increase imply?
+4. **Placebo test:** compare the two Pennsylvania regions (`region`), neither of which was treated. What *should* you find? What do you find?
 :::
 
 ::: {.callout-important}
 ## So what do we conclude?
 
-In these data, several pre-treatment coefficients are large, the placebo test finds an "effect", and the estimate is not distinguishable from zero once we cluster by state. The evidence for parallel trends is weak, so treat the pooled estimate as **illustrative, not credible**. That is a perfectly good lesson: a DiD is only as good as its comparison group. The published analysis uses a more carefully chosen comparison group and different methods (see below).
+In these data, employment in New Jersey **rose slightly** relative to Pennsylvania, the opposite of the textbook prediction. The result holds when we compare low- and high-wage restaurants *within* New Jersey, which makes a New Jersey-wide shock a less likely explanation. But we only have one treated state, two time periods and noisy phone surveys, so we can't check pre-trends and our standard errors may be too small. The paper started a long debate: Neumark & Wascher (2000) found employment losses using payroll records, and Card & Krueger (2000) found no losses using government employment data.
+:::
+
+
+# Simulation: what an event study adds
+
+With only two periods, the parallel trends assumption is **untestable**: we have no pre-treatment trend to look at. Suppose New Jersey's fast-food employment was already growing faster than Pennsylvania's before 1992. A 2×2 DiD would wrongly attribute that growth to the minimum wage.
+
+We can't check this in Card & Krueger's data, so let's **simulate** a world where we observe restaurants for 8 quarters, with the minimum wage introduced in quarter 5. The true effect of the minimum wage is **zero**. In one world trends are parallel; in the other, New Jersey is on a steeper upward trend.
+
+```{r}
+set.seed(580)
+
+simulate_panel <- function(nj_extra_trend) {
+  expand_grid(store_id = 1:400, quarter = 1:8) %>%
+    group_by(store_id) %>%
+    mutate(store_effect = rnorm(1, mean = 0, sd = 5)) %>%   # fixed restaurant traits
+    ungroup() %>%
+    mutate(nj = as.numeric(store_id <= 300),
+           post = as.numeric(quarter >= 5),
+           under_treatment = nj * post,
+           fte = 20 + store_effect - 3 * nj                  # NJ starts lower
+                 - 0.4 * quarter                             # common trend
+                 + nj_extra_trend * nj * quarter             # NJ-specific trend
+                 + 0 * under_treatment                       # true effect = 0
+                 + rnorm(n(), mean = 0, sd = 2))
+}
+
+parallel <- simulate_panel(nj_extra_trend = 0)
+diverging <- simulate_panel(nj_extra_trend = 1.5)
+```
+
+A 2×2 DiD using only the quarter before and the quarter after the policy (like Card & Krueger's two waves):
+
+```{r}
+etable(feols(fte ~ nj * post, data = filter(parallel, quarter %in% 4:5), vcov = ~ store_id),
+       feols(fte ~ nj * post, data = filter(diverging, quarter %in% 4:5), vcov = ~ store_id),
+       headers = c("Parallel trends", "Diverging trends"))
+```
+
+An **event study** estimates a separate effect for each quarter relative to a reference quarter. We use the last pre-treatment quarter (quarter 4) as the reference, so every coefficient is relative to the quarter before the policy.
+
+```{r}
+es_parallel <- feols(fte ~ i(quarter, nj, ref = 4) | store_id + quarter,
+                     data = parallel, vcov = ~ store_id)
+es_diverging <- feols(fte ~ i(quarter, nj, ref = 4) | store_id + quarter,
+                      data = diverging, vcov = ~ store_id)
+
+iplot(list(es_parallel, es_diverging),
+      xlab = "Quarter (policy introduced in quarter 5)",
+      main = "Event study: parallel (black) vs. diverging (red) trends")
+legend("topleft", col = c(1, 2), pch = c(20, 17), legend = c("Parallel trends", "Diverging trends"))
+```
+
+::: {.callout-tip}
+## ✏️ Your turn
+
+1. In the diverging world, the true effect is zero. What does the 2×2 DiD find? Could you have known it was wrong from two periods of data?
+2. How do the pre-treatment coefficients (quarters 1–3) differ between the two worlds?
+3. Change `nj_extra_trend` to a **negative** number. Which way is the 2×2 estimate biased now?
+4. Change the true effect from `0` to `2`. Can the event study still recover it in the parallel world?
 :::
 
 
 # How can we improve the analysis?
 
-- **Better comparison group:** In the paper, control states were those under similar lockdown restrictions that were *not* targeted. A comparison group that is more similar before treatment makes parallel trends more plausible.
-- **Placebo and robustness tests:** fake treatment dates, alternative outcomes, dropping one treated state at a time.
-- **Alternative estimators:** synthetic control and matrix completion methods construct the counterfactual more flexibly (see the extension below).
-- **Staggered timing:** when units are treated at different times, standard TWFE can be biased. Newer estimators (Callaway & Sant'Anna 2021; Sun & Abraham 2021) fix this. `fixest` implements Sun & Abraham via `sunab()`.
+- **More time periods:** with several pre-treatment periods we can run an event study and check pre-trends, as in the simulation. Card & Krueger (2000) revisited the question with longer government employment series.
+- **More treated and control units:** Dube, Lester & Reich (2010) compare every pair of neighbouring counties on opposite sides of a state border, across many minimum wage increases. This makes inference more credible than one treated state against one control.
+- **Placebo and robustness tests:** untreated outcomes, untreated groups (high-wage restaurants), alternative definitions of employment.
+- **Staggered timing:** when states raise minimum wages at different times, standard TWFE can be biased. Newer estimators (Callaway & Sant'Anna 2021; Sun & Abraham 2021) fix this. `fixest` implements Sun & Abraham via `sunab()`.
 
 
-# Extension: Matrix completion
+# References
 
-In Dickson & Hobolt (2024), we use matrix completion methods to estimate the counterfactual from the control states' data, then compare it with what actually happened in the treated states. This is beyond the scope of the lab, and it takes a while to run, so the chunk below is not evaluated by default.
-
-```{r}
-#| eval: false
-if (!("fect" %in% installed.packages())) install.packages("fect")
-library(fect)
-
-estimate <- function(data, formula) {
-  fect(data = data,
-       formula = formula,
-       method = "mc",
-       seed = 42,
-       index = c("county", "date_int"),
-       r = c(0, 5),
-       k = 10,
-       CV = TRUE,
-       force = "two-way",
-       nlambda = 15,
-       se = TRUE,
-       parallel = TRUE,
-       cores = 4, # adjust to the number of cores on your machine
-       nboots = 200)
-}
-
-full_state_aggregate <- estimate(data, aggregate_mobility ~ under_treatment)
-
-print(full_state_aggregate)
-plot(full_state_aggregate)
-```
+- Card, D., & Krueger, A. B. (1994). Minimum wages and employment: A case study of the fast-food industry in New Jersey and Pennsylvania. *American Economic Review*, 84(4), 772–793.
+- Card, D., & Krueger, A. B. (2000). Minimum wages and employment: A case study of the fast-food industry in New Jersey and Pennsylvania: Reply. *American Economic Review*, 90(5), 1397–1420.
+- Dube, A., Lester, T. W., & Reich, M. (2010). Minimum wage effects across state borders: Estimates using contiguous counties. *Review of Economics and Statistics*, 92(4), 945–964.
+- Neumark, D., & Wascher, W. (2000). Minimum wages and employment: A case study of the fast-food industry in New Jersey and Pennsylvania: Comment. *American Economic Review*, 90(5), 1362–1396.

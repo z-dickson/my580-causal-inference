@@ -1152,7 +1152,7 @@ In April 2020, Donald Trump tweeted calls to "LIBERATE" **Michigan, Minnesota an
 - **Threats?** Michigan's "Operation Gridlock" protest (15 April)? Trump's reopening guidelines (16 April)? Easter weekend in the pre-period? Spillovers to neighbouring states?
 :::
 
-We'll estimate this in **Lab 2**.
+In **Lab 2** we'll apply DiD to a classic case: New Jersey's 1992 minimum wage increase.
 
 
 # Regression Discontinuity (RD)
@@ -1298,15 +1298,18 @@ Does more schooling increase earnings? Ability, motivation and family background
 
 Open `code/lab2_did.qmd` from the [GitHub repository](https://github.com/z-dickson/my580-causal-inference) in RStudio.
 
+**Did New Jersey's 1992 minimum wage increase (\$4.25 → \$5.05) reduce employment?** [@card1994minimum]
+
 ::: {.incremental}
 0. *Warm-up:* DAG the design with `dagitty`
-1. Build the **treatment** and **post** indicators
-2. Plot **pre-treatment trends**
+1. Build the **treatment** (New Jersey) and **post** indicators
+2. Check that the treatment happened: did **wages** rise?
 3. Estimate the **2×2 DiD**: by hand, with regression, and with **two-way fixed effects**
-4. Estimate an **event study**
+4. Use **high-wage New Jersey restaurants** as a second control group
+5. *Simulation:* what an **event study** adds when we have more periods
 :::
 
-Data: [Google COVID-19 Community Mobility Reports](https://www.google.com/covid19/mobility/), county level, 10–23 April 2020. We'll regroup at 14:15.
+Data: [Card & Krueger's survey](https://davidcard.berkeley.edu/data_sets.html) of 410 fast-food restaurants in New Jersey and Pennsylvania, February and November 1992. We'll regroup at 14:15.
 
 
 # The DiD regression
@@ -1314,18 +1317,18 @@ Data: [Google COVID-19 Community Mobility Reports](https://www.google.com/covid1
 $$Y_{it} = \alpha_i + \lambda_t + \delta \, D_{it} + \varepsilon_{it}$$
 
 ::: {.incremental}
-- $Y_{it}$: mobility in county $i$ on day $t$
-- $\alpha_i$: **county fixed effects**, absorbing everything fixed about a county
-- $\lambda_t$: **day fixed effects**, absorbing everything that affects all counties on a given day
-- $D_{it} = \text{treated}_i \times \text{post}_t$: 1 for targeted counties after 17 April
+- $Y_{it}$: FTE employment in restaurant $i$ in survey wave $t$
+- $\alpha_i$: **restaurant fixed effects**, absorbing everything fixed about a restaurant
+- $\lambda_t$: **wave fixed effects**, absorbing everything that affects all restaurants in a given wave
+- $D_{it} = \text{NJ}_i \times \text{post}_t$: 1 for New Jersey restaurants after the increase
 - $\delta$: the DiD estimate of the **ATT**
 :::
 
 ```{.r}
-feols(aggregate_mobility ~ under_treatment | county + date, data = data, vcov = ~ state_name)
+feols(fte ~ under_treatment | store_id + wave, data = data, vcov = ~ store_id)
 ```
 
-Cluster standard errors at the level treatment is assigned: here, the **state**.
+Treatment is assigned at the **state** level, but with one treated and one control state we can't cluster by state. That's why the comparison **within** New Jersey matters.
 
 
 # Summary: Observational studies {.summary}
